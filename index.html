@@ -1,0 +1,1828 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Avicularia Testing</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="icon.png">
+  <link rel="shortcut icon" href="icon.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css?v=277-avicularia-testing">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Avicularia Testing">
+  <meta name="theme-color" content="#1e1f29">
+  <script src="storage-engine.js?v=277-avicularia-testing" defer></script>
+  <script src="incremental-sync.js?v=277-avicularia-testing" defer></script>
+  <script src="script.js?v=277-avicularia-testing" defer></script>
+
+
+  <script src="product-gallery.js?v=277-avicularia-testing" defer></script>
+  <script src="photo-lightbox.js?v=277-avicularia-testing" defer></script>
+  <script src="utilities.js?v=277-avicularia-testing" defer></script>
+  <script src="jszip.min.js?v=277-avicularia-testing" defer></script>
+  <script src="training.js?v=277-avicularia-testing" defer></script>
+  <script src="about-avicularia.js?v=277-avicularia-testing" defer></script>
+</head>
+<body class="auth-active">
+
+  <section id="auth-screen" class="auth-screen" aria-live="polite">
+    <div class="auth-card">
+      <span class="auth-logo-crop"><img src="icon-512.png" alt="Avicularia" class="auth-logo" width="512" height="512"></span>
+      <h1 id="auth-title">Вхід в акаунт</h1>
+      <p id="auth-subtitle" class="auth-subtitle">Увійдіть у свій акаунт, щоб продовжити</p>
+
+      <form id="login-form" class="auth-form" novalidate>
+        <label class="auth-field">
+          <span>Логін</span>
+          <input id="login-username" name="username" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="32" required>
+        </label>
+        <label class="auth-field">
+          <span>Пароль</span>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" maxlength="128" required>
+        </label>
+        <label class="auth-remember">
+          <input id="login-remember" type="checkbox">
+          <span>Запам’ятати мене</span>
+        </label>
+        <button id="login-submit" type="submit" class="auth-primary">Увійти</button>
+        <button id="show-forgot-password" type="button" class="auth-secondary">Забули пароль?</button>
+        <button id="show-register" type="button" class="auth-secondary">Зареєструватися</button>
+      </form>
+
+      <form id="register-form" class="auth-form" novalidate hidden>
+        <label class="auth-field">
+          <span>Логін</span>
+          <input id="register-username" type="text" autocomplete="username" maxlength="32" required>
+        </label>
+        <label class="auth-field">
+          <span>Пароль</span>
+          <input id="register-password" type="password" autocomplete="new-password" maxlength="128" required>
+        </label>
+        <div class="password-strength" aria-live="polite">
+          <div class="password-strength-track"><span id="password-strength-fill"></span></div>
+          <div id="password-strength-text">Пароль ще не введено</div>
+        </div>
+        <div class="password-rules">
+          <span data-password-rule="length">Мінімум 11 символів</span>
+          <span data-password-rule="upper">Велика літера</span>
+          <span data-password-rule="lower">Мала літера</span>
+          <span data-password-rule="number">Цифра</span>
+          <span data-password-rule="special">Спеціальний символ</span>
+        </div>
+        <label class="auth-field">
+          <span>Повторіть пароль</span>
+          <input id="register-password-confirm" type="password" autocomplete="new-password" maxlength="128" required>
+        </label>
+        <label class="auth-remember">
+          <input id="register-remember" type="checkbox">
+          <span>Запам’ятати мене</span>
+        </label>
+        <button id="register-submit" type="submit" class="auth-primary">Створити акаунт</button>
+        <button id="show-login" type="button" class="auth-secondary">Уже є акаунт — увійти</button>
+      </form>
+
+      <form id="forgot-password-form" class="auth-form" novalidate hidden>
+        <div class="recovery-request-card">
+          <div class="recovery-request-question">Чи бажаєте ви надіслати запит власнику сайту та зв’язатися з ним для відновлення доступу?</div>
+          <div class="recovery-request-account">Акаунт: <strong id="recovery-request-username">—</strong></div>
+          <div class="recovery-request-note">Старий пароль не передається і не може бути переглянутий. Власник зможе створити для вас новий пароль</div>
+          <div class="recovery-contact-list">
+            <a id="recovery-contact-telegram" href="#" target="_blank" rel="noopener" hidden></a>
+            <a id="recovery-contact-phone" href="#" hidden></a>
+          </div>
+        </div>
+        <button id="forgot-password-submit" type="submit" class="auth-primary">Так, надіслати запит</button>
+        <button id="forgot-password-back" type="button" class="auth-secondary">Ні, повернутися до входу</button>
+      </form>
+
+
+      <div id="auth-message" class="auth-message" role="status"></div>
+    </div>
+  </section>
+
+  <div class="app" id="main-app" hidden>
+    <div class="profile-bar">
+      <button type="button" id="profile-open" class="profile-avatar-button" aria-label="Відкрити профіль">
+        <img id="profile-avatar-small" alt="Фото профілю" hidden>
+        <span id="profile-avatar-initials">?</span>
+      </button>
+      <span class="profile-site-version" aria-label="Avicularia" title="Avicularia"><svg class="profile-version-decoration" aria-hidden="true" focusable="false" preserveAspectRatio="none"><path class="profile-version-line-left"></path><path class="profile-version-line-right"></path></svg><span class="profile-version-core"><span class="profile-version-number"><button type="button" id="av-brand-open" class="av-brand-link" aria-controls="about" title="Чому саме Avicularia?"><span class="av-brand-label">Avicularia</span></button></span></span></span>
+      <button type="button" id="profile-display-name" class="profile-display-name" disabled><span id="profile-display-name-text" class="profile-display-name-text">Користувач</span></button>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="blocks"><span class="tab-label-main">КБЖВ</span> <span class="tab-label-sub">Блоки:</span></button>
+      <button class="tab" data-tab="calculator"><span class="tab-label-main">КБЖВ</span> <span class="tab-label-sub">Калькулятор:</span></button>
+      <button class="tab" data-tab="archive"><span class="tab-label-main">КБЖВ</span> <span class="tab-label-sub">Архів:</span></button>
+      <button class="tab" data-tab="console"><span class="tab-label-single">Консоль:</span></button>
+    </nav>
+
+    <!-- Окрема кнопка: поза панеллю чотирьох основних вкладок. -->
+    <div class="utilities-entry" id="utilities-entry">
+      <button type="button" id="utilities-open" class="utilities-open" aria-label="Відкрити зручності" title="Відкрити зручності"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+
+    <!-- Друга сторінка: три незалежні вкладки, спільна консоль і окрема стрілка повернення. -->
+    <nav class="tabs utilities-tabs" aria-label="Навігація зручностей">
+      <button type="button" id="utilities-tools" class="tab utilities-nav-tools active" aria-pressed="true"><span class="tab-label-single">Зручності:</span></button>
+      <button type="button" id="utilities-training" class="tab utilities-nav-training" aria-pressed="false"><span class="tab-label-single">Тренування:</span></button>
+      <button type="button" id="utilities-console" class="tab utilities-nav-console" aria-pressed="false"><span class="tab-label-single">Консоль:</span></button>
+    </nav>
+    <div class="utilities-return-entry" id="utilities-return-entry">
+      <button type="button" id="utilities-back" class="utilities-open utilities-return" aria-label="Повернутися на головну сторінку" title="Повернутися на головну сторінку"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12H5m6-6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+
+    <section class="page" id="utilities" aria-label="Зручності">
+      <div class="wrap">
+        <header class="utilities-heading">
+          <h1>Корисні функції та розрахунки:</h1>
+          <p class="lead">Зручності для повсякденних розрахунків. Налаштування та розрахунки залишаються на цьому пристрої, але не входять до резервних копій. Згенеровані паролі не зберігаються</p>
+        </header>
+        <div class="utility-jump-row">
+          <button id="utility-jump-open" type="button" class="utility-main-button" aria-haspopup="dialog">Знайти потрібний блок</button>
+        </div>
+        <main class="utilities-grid">
+          <section id="utility-section-clock" class="tracker utility-card utility-clock" aria-labelledby="utility-clock-title">
+            <h2 id="utility-clock-title">Поточний час:</h2>
+            <div class="utility-clock-content">
+              <div class="utility-clock-display">
+                <time id="utility-clock-time" role="timer" aria-label="Поточний час">--:--:--</time>
+                <span id="utility-clock-date">Дата оновиться автоматично</span>
+              </div>
+              <label class="utility-field utility-clock-selector" for="utility-clock-zone">Часовий пояс
+                <select id="utility-clock-zone" aria-describedby="utility-clock-note">
+                  <option value="local">Часовий пояс пристрою</option>
+                  <optgroup label="Популярні часові пояси">
+                    <option value="Europe/Kyiv">Україна — Київ</option>
+                    <option value="Europe/Warsaw">Польща — Варшава</option>
+                    <option value="Europe/Berlin">Німеччина — Берлін</option>
+                    <option value="Europe/Paris">Франція — Париж</option>
+                    <option value="Europe/Brussels">Бельгія — Брюссель</option>
+                    <option value="Europe/Amsterdam">Нідерланди — Амстердам</option>
+                    <option value="Europe/Dublin">Ірландія — Дублін</option>
+                    <option value="Europe/London">Велика Британія — Лондон</option>
+                    <option value="Europe/Athens">Греція — Афіни</option>
+                    <option value="America/Toronto">Канада — Торонто</option>
+                    <option value="America/Vancouver">Канада — Ванкувер</option>
+                    <option value="America/New_York">США — Нью-Йорк</option>
+                    <option value="America/Los_Angeles">США — Лос-Анджелес</option>
+                    <option value="Asia/Dubai">ОАЕ — Дубай</option>
+                    <option value="Asia/Tokyo">Японія — Токіо</option>
+                    <option value="Asia/Shanghai">Китай — Шанхай</option>
+                    <option value="Australia/Sydney">Австралія — Сідней</option>
+                    <option value="Pacific/Auckland">Нова Зеландія — Окленд</option>
+                    <option value="UTC">UTC</option>
+                  </optgroup>
+                  <optgroup id="utility-clock-other-zones" label="Інші часові пояси"></optgroup>
+                </select>
+              </label>
+            </div>
+            <p id="utility-clock-note" class="utility-clock-note">Час синхронізований із годинником вашого пристрою</p>
+          </section>
+          <section id="utility-section-password" class="tracker utility-card utility-password" aria-labelledby="utility-password-title">
+            <h2 id="utility-password-title">Генератор паролів:</h2>
+            <p class="utility-description">Випадковий пароль створюється тільки на вашому пристрої</p>
+            <label class="utility-field" for="utility-password-length">Довжина пароля
+              <input id="utility-password-length" type="number" inputmode="numeric" min="1" max="128" step="1" value="15" autocomplete="off">
+            </label>
+            <div class="utility-options" role="group" aria-label="Типи символів пароля">
+              <label><input id="utility-chars-lower" type="checkbox" checked> Малі літери (a–z)</label>
+              <label><input id="utility-chars-upper" type="checkbox" checked> Великі літери (A–Z)</label>
+              <label><input id="utility-chars-digits" type="checkbox" checked> Цифри (0–9)</label>
+              <label><input id="utility-chars-special" type="checkbox" checked> Спеціальні символи (!, @, #…)</label>
+            </div>
+            <div class="utility-action-row utility-password-actions">
+              <button type="button" id="utility-password-generate" class="utility-main-button">Згенерувати пароль</button>
+              <button type="button" id="utility-password-clear" class="utility-clear-button">Очистити</button>
+            </div>
+            <label class="utility-field" for="utility-password-result">Згенерований пароль</label>
+            <div class="utility-password-row">
+              <input id="utility-password-result" type="text" readonly spellcheck="false" autocomplete="off" placeholder="Пароль з’явиться тут" aria-label="Згенерований пароль">
+              <button type="button" id="utility-password-copy">Копіювати</button>
+            </div>
+            <div class="utility-strength" aria-live="polite">
+              <div class="utility-strength-track"><span id="utility-strength-fill"></span></div>
+              <span id="utility-strength-label">Надійність: ще не розраховано</span>
+            </div>
+            <p id="utility-password-message" class="utility-message" role="status"></p>
+          </section>
+
+          <section id="utility-section-ratio" class="tracker utility-card" aria-labelledby="utility-ratio-title">
+            <h2 id="utility-ratio-title">Коефіцієнт піднятої ваги:</h2>
+            <p class="utility-description">Співвідношення ваги штанги до маси тіла: піднята вага ÷ власна вага</p>
+            <div class="utility-input-pair">
+              <label class="utility-field" for="utility-bodyweight">Власна вага, кг
+                <input id="utility-bodyweight" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-liftweight">Піднята вага, кг
+                <input id="utility-liftweight" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+            </div>
+            <div class="utility-result" aria-live="polite">
+              <span>Коефіцієнт</span>
+              <strong id="utility-ratio-result">—</strong>
+              <small id="utility-ratio-note">Вкажіть обидві ваги</small>
+            </div>
+            <div class="utility-action-row">
+              <button type="button" id="utility-ratio-copy" class="utility-copy-result">Копіювати</button>
+              <button type="button" id="utility-ratio-clear" class="utility-clear-button">Очистити</button>
+            </div>
+          </section>
+
+          <section id="utility-section-convert" class="tracker utility-card" aria-labelledby="utility-convert-title">
+            <h2 id="utility-convert-title">Конвертер:</h2>
+            <p class="utility-description">Оберіть напрям і введіть число. Для інших одиниць відкрийте «Усі одиниці»</p>
+            <div class="utility-convert-quick">
+              <label class="utility-field" for="utility-convert-direction">Що конвертуємо?
+                <select id="utility-convert-direction" aria-label="Напрям конвертації">
+                  <option value="mass:lb:kg">Фунти (lbs) → кілограми (кг)</option>
+                  <option value="mass:kg:lb">Кілограми (кг) → фунти (lbs)</option>
+                </select>
+              </label>
+              <label class="utility-field" for="utility-convert-input">Введіть число
+                <input id="utility-convert-input" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+            </div>
+<details id="utility-convert-more" class="utility-convert-more">
+              <summary>Усі одиниці — вибрати вручну</summary>
+              <div class="utility-convert-more-content">
+                <label class="utility-field" for="utility-convert-category">Категорія
+                  <select id="utility-convert-category"></select>
+                </label>
+                <div class="utility-input-pair utility-convert-unit-pair">
+                  <label class="utility-field" for="utility-convert-from">З якої одиниці
+                    <select id="utility-convert-from"></select>
+                  </label>
+                  <label class="utility-field" for="utility-convert-to">В яку одиницю
+                    <select id="utility-convert-to"></select>
+                  </label>
+                </div>
+                <label class="utility-field" for="utility-convert-search">Пошук одиниць
+                  <input id="utility-convert-search" type="search" inputmode="search" autocapitalize="off" autocomplete="off" placeholder="Назва або скорочення">
+                </label>
+                <div id="utility-convert-search-results" class="utility-convert-search-results" role="list" aria-label="Знайдені одиниці" hidden></div>
+              </div>
+            </details>
+            <div class="utility-result" aria-live="polite">
+              <span>Результат</span>
+              <strong id="utility-convert-result">—</strong>
+              <small id="utility-convert-note">Введіть значення для конвертації</small>
+            </div>
+            <div class="utility-action-row">
+              <button type="button" id="utility-convert-copy" class="utility-copy-result">Копіювати</button>
+              <button type="button" id="utility-convert-clear" class="utility-clear-button">Очистити</button>
+            </div>
+          </section>
+
+          <section id="utility-section-cooked" class="tracker utility-card utility-cooked" aria-labelledby="utility-cooked-title">
+            <h2 id="utility-cooked-title">Перерахунок КБЖВ сирого продукту на готовий:</h2>
+            <p class="utility-description">Введіть масу всього сирого продукту та готової страви <strong>без ваги каструлі</strong>. Результати розраховуються за фактичною вагою після приготування</p>
+            <div class="utility-input-pair">
+              <label class="utility-field" for="utility-cooked-raw-weight">Маса сирого продукту (г)
+                <input id="utility-cooked-raw-weight" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-cooked-ready-weight">Маса готового продукту (г)
+                <input id="utility-cooked-ready-weight" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+            </div>
+            <div class="utility-section-divider"></div>
+            <h3 class="utility-subtitle">КБЖВ сирого продукту на 100 г:</h3>
+            <div class="utility-cooked-top-actions">
+              <button id="utility-cooked-select-product" type="button" class="utility-main-button" aria-haspopup="dialog">Вибрати з КБЖВ Блоків</button>
+              <button type="button" id="utility-cooked-add" class="utility-main-button">До калькулятора</button>
+            </div>
+            <p id="utility-cooked-selected-name" class="utility-description" aria-live="polite">Або введіть показники КБЖВ вручну</p>
+            <div class="utility-nutrient-fields">
+              <label class="utility-field" for="utility-cooked-kcal">Калорії, ккал
+                <input id="utility-cooked-kcal" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-cooked-protein">Білки, г
+                <input id="utility-cooked-protein" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-cooked-fat">Жири, г
+                <input id="utility-cooked-fat" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-cooked-carb">Вуглеводи, г
+                <input id="utility-cooked-carb" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-cooked-sugar">Цукри, г
+                <input id="utility-cooked-sugar" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-cooked-salt">Сіль, г
+                <input id="utility-cooked-salt" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-cooked-fiber">Клітковина, г
+                <input id="utility-cooked-fiber" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+            </div>
+            <div class="utility-result utility-cooked-output" aria-live="polite">
+              <span>Готовий продукт на 100 г</span>
+              <strong id="utility-cooked-per100">—</strong>
+              <div id="utility-cooked-per100-macros" class="utility-cooked-macros"></div>
+              <small id="utility-cooked-note">Вкажіть масу сирого й готового продукту та дані з етикетки</small>
+            </div>
+            <div class="utility-section-divider"></div>
+            <div class="utility-input-pair utility-cooked-portion-controls">
+              <label class="utility-field" for="utility-cooked-portion">Вага порції готового продукту (г)
+                <input id="utility-cooked-portion" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-cooked-target">Або бажана калорійність (ккал)
+                <input id="utility-cooked-target" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+              </label>
+            </div>
+            <p class="utility-description">Можна заповнити одне або обидва поля: перше показує КБЖВ порції, друге — скільки грамів готового продукту потрібно для заданої калорійності</p>
+            <div class="utility-cooked-outcomes" aria-live="polite">
+              <div class="utility-cooked-outcome">
+                <span>КБЖВ готової порції</span>
+                <strong id="utility-cooked-portion-result">—</strong>
+                <div id="utility-cooked-portion-macros" class="utility-cooked-macros"></div>
+              </div>
+              <div class="utility-cooked-outcome">
+                <span>Вага готового на задану калорійність</span>
+                <strong id="utility-cooked-target-result">—</strong>
+                <small id="utility-cooked-target-note">Введіть бажану калорійність</small>
+              </div>
+            </div>
+            <p class="utility-description">Розрахунок передбачає, що змінилася лише маса через воду. Додана олія, соуси або втрати поживних речовин при приготуванні потребують окремого обліку</p>
+            <div class="utility-action-row utility-cooked-actions">
+              <button type="button" id="utility-cooked-copy" class="utility-copy-result">Копіювати</button>
+              <button type="button" id="utility-cooked-clear" class="utility-clear-button">Очистити</button>
+            </div>
+          </section>
+
+          <section id="utility-section-sugarless" class="tracker utility-card utility-sugarless" aria-labelledby="utility-sugarless-title">
+            <h2 id="utility-sugarless-title">Вуглеводи без цукрів:</h2>
+            <p class="utility-description">Різниця між загальними вуглеводами та цукрами. Це розрахунок нецукрових вуглеводів, а не показник швидкості засвоєння</p>
+            <button type="button" id="utility-sugarless-archive" class="utility-main-button" aria-haspopup="dialog" aria-controls="utility-archive-modal">Вибрати з КБЖВ Архіву</button>
+            <p id="utility-sugarless-source" class="utility-description" aria-live="polite">Або введіть значення вручну</p>
+            <div class="utility-input-pair">
+              <label class="utility-field" for="utility-sugarless-carb">Вуглеводи, г
+                <input id="utility-sugarless-carb" type="text" inputmode="decimal" autocomplete="off" placeholder="###">
+              </label>
+              <label class="utility-field" for="utility-sugarless-sugar">Цукри, г
+                <input id="utility-sugarless-sugar" type="text" inputmode="decimal" autocomplete="off" placeholder="###">
+              </label>
+            </div>
+            <div class="utility-result" aria-live="polite">
+              <span>Вуглеводи без цукрів</span>
+              <strong id="utility-sugarless-result">—</strong>
+              <small id="utility-sugarless-note">Вкажіть вуглеводи та цукри за однакову кількість продукту або за один день</small>
+            </div>
+            <div class="utility-action-row">
+              <button type="button" id="utility-sugarless-copy" class="utility-copy-result">Копіювати</button>
+              <button type="button" id="utility-sugarless-clear" class="utility-clear-button">Очистити</button>
+            </div>
+          </section>
+
+          <section id="utility-section-price" class="tracker utility-card utility-price" aria-labelledby="utility-price-title">
+            <h2 id="utility-price-title">Порівняння цін товарів:</h2>
+            <p class="utility-description">Вкажіть ціну й кількість для двох варіантів. Сайт покаже ціну за однакову кількість і вигіднішу покупку</p>
+            <label class="utility-field" for="utility-price-kind">Що купуємо?
+              <select id="utility-price-kind">
+                <option value="mass">За вагою (г, кг)</option>
+                <option value="volume">За об’ємом (мл, л)</option>
+                <option value="count">За кількістю (шт.)</option>
+                <option value="length">За довжиною (см, м)</option>
+                <option value="area">За площею (см², м²)</option>
+              </select>
+            </label>
+            <div class="utility-price-options">
+              <div class="utility-price-option">
+                <h3>Варіант 1</h3>
+                <label class="utility-field" for="utility-price-a-cost">Ціна, грн
+                  <input id="utility-price-a-cost" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+                </label>
+                <div class="utility-price-amount">
+                  <label class="utility-field" for="utility-price-a-qty">Кількість
+                    <input id="utility-price-a-qty" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+                  </label>
+                  <label class="utility-field" for="utility-price-a-unit">Одиниця
+                    <select id="utility-price-a-unit"></select>
+                  </label>
+                </div>
+              </div>
+              <div class="utility-price-option">
+                <h3>Варіант 2</h3>
+                <label class="utility-field" for="utility-price-b-cost">Ціна, грн
+                  <input id="utility-price-b-cost" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+                </label>
+                <div class="utility-price-amount">
+                  <label class="utility-field" for="utility-price-b-qty">Кількість
+                    <input id="utility-price-b-qty" type="text" inputmode="decimal" autocomplete="off" placeholder="Наприклад: ###">
+                  </label>
+                  <label class="utility-field" for="utility-price-b-unit">Одиниця
+                    <select id="utility-price-b-unit"></select>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="utility-section-divider" aria-hidden="true"></div>
+            <div class="utility-price-reference">
+              <label class="utility-field" for="utility-price-ref-qty">Порівняти ціну за
+                <input id="utility-price-ref-qty" type="text" inputmode="decimal" autocomplete="off" value="100" placeholder="Наприклад: ###">
+              </label>
+              <label class="utility-field" for="utility-price-ref-unit">Одиниця
+                <select id="utility-price-ref-unit"></select>
+              </label>
+            </div>
+            <div class="utility-result utility-price-result" aria-live="polite">
+              <span>Порівняння</span>
+              <strong id="utility-price-winner">—</strong>
+              <div class="utility-price-results">
+                <div>Варіант 1: <b id="utility-price-a-result">—</b></div>
+                <div>Варіант 2: <b id="utility-price-b-result">—</b></div>
+              </div>
+              <small id="utility-price-note">Вкажіть ціну та кількість для обох варіантів</small>
+            </div>
+            <div class="utility-action-row">
+              <button type="button" id="utility-price-copy" class="utility-copy-result">Копіювати</button>
+              <button type="button" id="utility-price-clear" class="utility-clear-button">Очистити</button>
+            </div>
+          </section>
+
+          <section id="utility-section-dates" class="tracker utility-card utility-dates" aria-labelledby="utility-dates-title">
+            <h2 id="utility-dates-title">Калькулятор дат:</h2>
+            <p class="utility-description">Виберіть дві дати. За потреби додайте час із точністю до секунди</p>
+            <div class="utility-date-options">
+              <div class="utility-date-option">
+                <h3>Перша дата</h3>
+                <label class="utility-field" for="utility-date-start">Дата
+                  <span class="utility-datetime-picker"><span class="utility-picker-value" id="utility-date-start-display" aria-hidden="true">Оберіть дату</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><input id="utility-date-start" type="date" autocomplete="off"></span>
+                </label>
+                <label class="utility-field" for="utility-date-start-time">Час (необов’язково)
+                  <span class="utility-datetime-picker"><span class="utility-picker-value" id="utility-date-start-time-display" aria-hidden="true">Оберіть час</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><input id="utility-date-start-time" type="time" step="1" autocomplete="off"></span>
+                </label>
+              </div>
+              <div class="utility-date-option">
+                <h3>Друга дата</h3>
+                <label class="utility-field" for="utility-date-end">Дата
+                  <span class="utility-datetime-picker"><span class="utility-picker-value" id="utility-date-end-display" aria-hidden="true">Оберіть дату</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><input id="utility-date-end" type="date" autocomplete="off"></span>
+                </label>
+                <label class="utility-field" for="utility-date-end-time">Час (необов’язково)
+                  <span class="utility-datetime-picker"><span class="utility-picker-value" id="utility-date-end-time-display" aria-hidden="true">Оберіть час</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><input id="utility-date-end-time" type="time" step="1" autocomplete="off"></span>
+                </label>
+              </div>
+            </div>
+            <div class="utility-result utility-date-result" aria-live="polite">
+              <span>Між датами минуло</span>
+              <strong id="utility-date-result">—</strong>
+              <div id="utility-date-totals" class="utility-date-totals"></div>
+              <small id="utility-date-note">Вкажіть обидві дати. Якщо час не заданий, використовується 00:00:00</small>
+            </div>
+            <div class="utility-action-row">
+              <button type="button" id="utility-date-copy" class="utility-copy-result">Копіювати</button>
+              <button type="button" id="utility-date-clear" class="utility-clear-button">Очистити</button>
+            </div>
+          </section>
+        </main>
+        <footer class="site-footer">
+          © 2026 Усі права захищено · Власник, програміст та дизайнер —
+          <strong>Батик Антоній Віталійович · Monderight</strong>
+        </footer>
+      </div>
+    </section>
+
+    <section class="page" id="profile">
+      <div class="wrap">
+        <header>
+          <h1>Профіль:</h1>
+          <p class="lead">Особисті дані профілю. Вони не впливають на технічні дані сайту, розрахунки КБЖВ та вкладку «Тренування»</p>
+        </header>
+        <main>
+          <section class="tracker profile-card">
+            <div class="profile-photo-section">
+              <button type="button" id="profile-photo-button" class="profile-photo-button" aria-label="Змінити фото профілю">
+                <img id="profile-avatar-large" alt="Фото профілю" hidden>
+                <span id="profile-avatar-large-initials">?</span>
+              </button>
+              <div class="profile-photo-actions">
+                <button type="button" id="profile-photo-change">Змінити фото</button>
+                <button type="button" id="profile-photo-remove" class="profile-photo-remove">Видалити фото</button>
+              </div>
+              <input id="profile-photo-input" type="file" accept="image/*" hidden>
+            </div>
+
+            <div class="profile-fields">
+              <label>Відображуване ім’я
+                <input id="profile-display-input" type="text" maxlength="20" placeholder="Максимум 20 символів">
+                <small><span id="profile-display-count">0</span>/20</small>
+              </label>
+              <label>ПІБ
+                <input id="profile-full-name" type="text" maxlength="120" placeholder="Наприклад: ###">
+              </label>
+              <label>Дата народження
+                <input id="profile-birth-date" type="date">
+              </label>
+              <div class="profile-measurements">
+                <label><span class="profile-measurement-title">Поточна вага, кг <small id="profile-weight-updated" title="Дата останньої зміни поточної ваги">—</small></span>
+                  <input id="profile-weight" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Наприклад: ##">
+                </label>
+                <label><span class="profile-measurement-title">Поточний зріст, см <small id="profile-height-updated" title="Дата останньої зміни поточного зросту">—</small></span>
+                  <input id="profile-height" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Наприклад: ###">
+                </label>
+              </div>
+            </div>
+
+            <div class="profile-save-row av-profile-actions">
+              <button type="button" id="profile-save">Зберегти профіль</button>
+            </div>
+
+          </section>
+        </main>
+        <footer class="site-footer">
+          © 2026 Усі права захищено · Власник, програміст та дизайнер —
+          <strong>Батик Антоній Віталійович · Monderight</strong>
+        </footer>
+      </div>
+    </section>
+
+    <section class="page active" id="blocks">
+      <div class="wrap">
+        <header>
+          <h1>Макронутрієнти та енергетична цінність продуктів:</h1>
+          <p class="lead">Натисніть на іконку, щоб скопіювати КБЖВ з блоку та за потреби вказати вагу продукту</p>
+
+          <div class="database-buttons">
+            <button id="export-products">Експорт бази</button>
+            <button id="import-products">Імпорт бази</button>
+          </div>
+
+          <div class="add-product-container">
+            <button id="add-product">Додати продукт</button>
+            <button id="delete-product">Видалити продукт</button>
+            <button id="reorder-products" class="reorder-product-button">Змінити розташування</button>
+            <button id="sort-products">Сортувати</button>
+          </div>
+
+          <div class="search-container" style="margin-top: 18px;">
+            <div class="search-wrapper">
+              <input type="text" id="search" placeholder="Пошук продукту...">
+              <button type="button" id="clear-search" class="av-search-clear-button" aria-label="Очистити пошук продуктів" disabled><span class="av-search-clear-glyph" aria-hidden="true">✕</span></button>
+            </div>
+          </div>
+
+          <input type="file" id="import-file" accept=".json,application/json" hidden>
+        </header>
+
+        <main>
+          <div class="grid" id="grid"></div>
+        </main>
+
+        <footer class="site-footer">
+          © 2026 Усі права захищено · Власник, програміст та дизайнер —
+          <strong>Батик Антоній Віталійович · Monderight</strong>
+        </footer>
+      </div>
+    </section>
+
+    <section class="page" id="calculator">
+      <div class="wrap">
+        <header>
+          <h1>Калькулятор підсумку КБЖВ:</h1>
+          <p class="lead">Вставте вже скопійовані дані з вкладки «КБЖВ-блоки» та розрахуйте денний підсумок КБЖВ. Кнопка «Вставити» читає текст із буфера обміну</p>
+        </header>
+
+        <main>
+          <div class="paste-box">
+            <textarea id="calc-input" placeholder="Вставте сюди:
+Продукт, для ### грам - ### ккал / ### білка / ### жирів / ### вуглеводів / ### цукрів / ### солі / ### клітковини"></textarea>
+            <div class="buttons">
+              <button id="calc-add">Додати</button>
+              <button id="calc-clear-text">Очистити текст</button>
+              <button id="calc-clear-blocks">Очистити блоки</button>
+              <button id="calc-paste" type="button">Вставити</button>
+              <button id="calc-section">Розділ</button>
+              <div id="calc-quick-presets" class="calc-quick-presets"></div>
+              <button id="calc-quick-manage" class="calc-quick-manage">Швидкі КБЖВ</button>
+            </div>
+          </div>
+
+          <section class="tracker daily-goal-card">
+            <div class="daily-goal-head">
+              <div>
+                <h2>Денна ціль КБЖВ:</h2>
+                <p class="daily-goal-subtitle">Встановіть власний денний план. Цілі можна в будь-який момент змінити або вимкнути</p>
+              </div>
+              <button id="daily-goal-toggle" type="button" class="daily-goal-toggle">Увімкнути</button>
+            </div>
+            <div id="daily-goal-content" class="daily-goal-content">
+              <div id="daily-goal-settings" class="daily-goal-settings">
+              <div class="daily-goal-inputs">
+                <label>Калорії, ккал<input id="goal-kcal" type="number" min="0" step="1" inputmode="decimal"></label>
+                <label>Білки, г<input id="goal-protein" type="number" min="0" step="0.001" inputmode="decimal"></label>
+                <label>Жири, г<input id="goal-fat" type="number" min="0" step="0.001" inputmode="decimal"></label>
+                <label>Вуглеводи, г<input id="goal-carb" type="number" min="0" step="0.001" inputmode="decimal"></label>
+                <label>Цукри, г<input id="goal-sugar" type="number" min="0" step="0.001" inputmode="decimal"></label>
+                <label>Сіль, г<input id="goal-salt" type="number" min="0" step="0.001" inputmode="decimal"></label>
+                <label>Клітковина, г<input id="goal-fiber" type="number" min="0" step="0.001" inputmode="decimal"></label>
+              </div>
+              <div class="daily-goal-actions"><button id="daily-goal-save" type="button">Зберегти цілі</button></div>
+              <div class="daily-goal-help">
+                <strong>Як орієнтовно визначити цілі:</strong><br>
+                • <strong>Калорії:</strong> визначають від добових енерговитрат і мети (підтримка, набір або зниження маси)<br>
+                • <strong>Білки:</strong> для фізично активних людей практичний орієнтир часто становить приблизно 1,6–2,2 г/кг маси тіла на добу<br>
+                • <strong>Жири:</strong> як простий практичний старт для самостійного розрахунку можна використати приблизно 0,8–1,2 г/кг/добу, а потім звірити результат із загальною калорійністю. Для загального здорового раціону ВООЗ вказує приблизно 15–30% добової енергії з жирів; 1 г жиру = 9 ккал<br>
+                • <strong>Вуглеводи:</strong> для помірно активної людини як практичний старт можна взяти приблизно 3–5 г/кг/добу; при великому тренувальному обсязі потреба може бути вищою. Для загального раціону ВООЗ наводить приблизно 45–75% добової енергії з вуглеводів; 1 г = 4 ккал<br>
+                • <strong>Цукри:</strong> поле «Цукри» в калькуляторі зазвичай містить загальні цукри з етикетки продукту. Рекомендація ВООЗ «менше 10% добової енергії, бажано до 5%» стосується саме вільних цукрів, тому її не слід напряму прирівнювати до показника загальних цукрів у калькуляторі<br>
+                • <strong>Сіль:</strong> для дорослих — менше 5 г/добу (≈ 2 г натрію). Для солі не варто використовувати норму «г/кг»: рекомендована межа задається на добу, а не на кілограм маси тіла<br>
+                • <strong>Клітковина:</strong> людям віком від 10 років — щонайменше 25 г природної харчової клітковини на добу<br>
+                <span class="daily-goal-help-note">Значення в г/кг для жирів і вуглеводів — практичні стартові орієнтири, а не універсальні норми. Потреби змінюються залежно від активності, мети та стану здоров’я</span>
+              </div>
+              </div>
+              <div class="daily-goal-view-actions">
+                <button id="daily-goal-details-toggle" type="button">Показати налаштування</button>
+                <button id="daily-goal-copy-remaining" type="button">Скопіювати залишок</button>
+              </div>
+              <div class="daily-goal-remaining">
+                <h3>Залишилось до цілі:</h3>
+                <div class="goal-remaining-grid">
+                  <div>Калорії: <span id="remain-kcal">—</span></div>
+                  <div>Білки: <span id="remain-protein">—</span> г</div>
+                  <div>Жири: <span id="remain-fat">—</span> г</div>
+                  <div>Вуглеводи: <span id="remain-carb">—</span> г</div>
+                  <div>Цукри: <span id="remain-sugar">—</span> г</div>
+                  <div>Сіль: <span id="remain-salt">—</span> г</div>
+                  <div>Клітковина: <span id="remain-fiber">—</span> г</div>
+                </div>
+              </div>
+              <div id="daily-goal-progress" class="daily-goal-progress">
+                <div class="goal-progress-row" data-key="kcal"><div class="goal-progress-label"><span>Калорії</span><strong id="progress-label-kcal">0 / 0</strong></div><div class="goal-progress-track"><div id="progress-kcal" class="goal-progress-fill"></div><span class="goal-progress-target"></span></div></div>
+                <div class="goal-progress-row" data-key="protein"><div class="goal-progress-label"><span>Білки</span><strong id="progress-label-protein">0 / 0 г</strong></div><div class="goal-progress-track"><div id="progress-protein" class="goal-progress-fill"></div><span class="goal-progress-target"></span></div></div>
+                <div class="goal-progress-row" data-key="fat"><div class="goal-progress-label"><span>Жири</span><strong id="progress-label-fat">0 / 0 г</strong></div><div class="goal-progress-track"><div id="progress-fat" class="goal-progress-fill"></div><span class="goal-progress-target"></span></div></div>
+                <div class="goal-progress-row" data-key="carb"><div class="goal-progress-label"><span>Вуглеводи</span><strong id="progress-label-carb">0 / 0 г</strong></div><div class="goal-progress-track"><div id="progress-carb" class="goal-progress-fill"></div><span class="goal-progress-target"></span></div></div>
+                <div class="goal-progress-row" data-key="sugar"><div class="goal-progress-label"><span>Цукри</span><strong id="progress-label-sugar">0 / 0 г</strong></div><div class="goal-progress-track"><div id="progress-sugar" class="goal-progress-fill"></div><span class="goal-progress-target"></span></div></div>
+                <div class="goal-progress-row" data-key="salt"><div class="goal-progress-label"><span>Сіль</span><strong id="progress-label-salt">0 / 0 г</strong></div><div class="goal-progress-track"><div id="progress-salt" class="goal-progress-fill"></div><span class="goal-progress-target"></span></div></div>
+                <div class="goal-progress-row" data-key="fiber"><div class="goal-progress-label"><span>Клітковина</span><strong id="progress-label-fiber">0 / 0 г</strong></div><div class="goal-progress-track"><div id="progress-fiber" class="goal-progress-fill"></div><span class="goal-progress-target"></span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="tracker">
+            <h2>Денний підсумок:</h2>
+            <div class="totals">
+              <div>Калорії: <span id="kcal">0</span></div>
+              <div class="totals-divider"></div>
+              <div>Білки: <span id="protein">0</span> г</div>
+              <div>Жири: <span id="fat">0</span> г</div>
+              <div>Вуглеводи: <span id="carb">0</span> г</div>
+              <div class="totals-divider"></div>
+              <div>Цукри: <span id="sugar">0</span> г</div>
+              <div>Сіль: <span id="salt">0</span> г</div>
+              <div class="totals-divider"></div>
+              <div>Клітковина: <span id="fiber">0</span> г</div>
+            </div>
+
+            <div class="summary-buttons">
+              <button id="copy-total">Скопіювати підсумок</button>
+              <button id="reorder-calculator-history">Змінити розташування історії</button>
+              <button id="save-archive">Зберегти в архів</button>
+            </div>
+
+            <h3>Історія:</h3>
+            <div id="calc-log"></div>
+          </section>
+        </main>
+
+        <footer class="site-footer">
+          © 2026 Усі права захищено · Власник, програміст та дизайнер —
+          <strong>Батик Антоній Віталійович · Monderight</strong>
+        </footer>
+      </div>
+    </section>
+
+    <div id="stats-fullscreen" class="stats-fullscreen" hidden role="dialog" aria-modal="true" aria-label="Повноекранний графік статистики">
+      <div class="stats-fullscreen-toolbar">
+        <strong id="stats-fullscreen-title">Графік статистики</strong>
+        <div class="stats-fullscreen-datebar" aria-label="Період повноекранного графіка">
+          <label>Від <input type="date" id="stats-fullscreen-from" aria-label="Початкова дата повноекранного графіка"></label>
+          <label>До <input type="date" id="stats-fullscreen-to" aria-label="Кінцева дата повноекранного графіка"></label>
+        </div>
+        <span id="stats-fullscreen-inspection" role="status" aria-live="polite" hidden></span>
+        <div class="stats-fullscreen-actions">
+          <button type="button" id="stats-fullscreen-minus" aria-label="Зменшити масштаб">−</button>
+          <button type="button" id="stats-fullscreen-reset" aria-label="Скинути масштаб">100%</button>
+          <button type="button" id="stats-fullscreen-plus" aria-label="Збільшити масштаб">+</button>
+          <button type="button" id="stats-fullscreen-close">Закрити</button>
+        </div>
+      </div>
+      <div id="stats-fullscreen-viewport" class="stats-fullscreen-viewport">
+        <div class="stats-fullscreen-plot">
+          <canvas id="stats-fullscreen-canvas" aria-label="Графік з можливістю масштабування та прокручування"></canvas>
+          <div id="stats-fullscreen-tooltip" class="stats-tooltip" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Особистий план: локальний IndexedDB, поза експортом/імпортом/синхронізацією КБЖВ. -->
+    <section class="page" id="training" aria-label="Тренування">
+      <div class="wrap">
+        <header class="training-heading">
+          <h1>План тренувань:</h1>
+          <p class="lead">Перегляд програми з еталонного архіву. Тренування беруться лише з <code>04_plan.json</code></p>
+        </header>
+        <main class="training-main">
+          <section class="tracker training-panel av-action-panel">
+            <h2>Керування архівом:</h2>
+            <div class="av-main-actions">
+              <button type="button" id="av-upload-open">Завантажити на сайт</button>
+              <button type="button" id="av-download-open">Вивантажити з сайту</button>
+              <button type="button" id="av-clear-open">Очистити вкладку</button>
+              <button type="button" id="av-refresh-open">Оновити вкладку</button>
+              <button type="button" id="av-all-comments-toggle" aria-pressed="false">Сховати коментарі</button>
+            </div>
+            <p id="training-status" class="training-status" role="status" aria-live="polite">Очікування входу</p>
+            <div class="training-conflict-actions" id="av-conflict" hidden>
+              <p>На пристрої та сервері є різні зміни. Жодна копія не буде перезаписана без вибору</p>
+              <button type="button" id="av-conflict-local">Зберегти локальну</button>
+              <button type="button" id="av-conflict-remote">Використати серверну</button>
+            </div>
+            <p class="training-storage-note">Шість файлів зберігаються для вашого акаунта в окремій D1 та локальній IndexedDB. Синхронізація відбувається автоматично. Загальний імпорт та експорт КБЖВ ці файли не зачіпає</p>
+          </section>
+          <div id="training-content" class="training-content" aria-live="polite"></div>
+          <section class="tracker training-panel" id="av-current-context-panel">
+            <h2>Переглянути поточну позицію:</h2>
+            <div class="av-context-actions">
+              <button type="button" id="av-context-position">Поточна позиція</button>
+              <button type="button" id="av-context-timeline">Хронологія</button>
+              <button type="button" id="av-context-health">Стан здоров’я</button>
+            </div>
+            <p class="training-pdf-hint">Відомості взято з файлів тренувального архіву. Дата останнього звіту відображається окремо</p>
+          </section>
+          <section class="tracker training-panel" id="av-files-panel">
+            <h2>Файли архіву:</h2>
+            <div id="av-files-list" class="av-files-list"></div>
+            <p class="training-pdf-hint">«Переглянути» показує зміст файлу у зрозумілому вигляді, без JSON-коду та можливості редагування. Для заміни використовуйте «Завантажити на сайт»</p>
+          </section>
+        </main>
+      </div>
+    </section>
+    <section class="page" id="console">
+      <div class="wrap">
+        <header>
+          <h1>Консоль дій:</h1>
+          <p class="lead">Журнал останніх дій на сайті з точною датою та часом</p>
+        </header>
+        <main>
+          <section class="tracker">
+            <h2 class="console-section-title">Журнал дій:</h2>
+            <div id="console-log" class="console-log" aria-live="polite"></div>
+            <div class="console-system-divider" aria-hidden="true"></div>
+            <section class="system-status" aria-labelledby="system-status-title">
+              <div class="system-status-head">
+                <h2 id="system-status-title" class="console-section-title">Стан системи:</h2>
+                <div class="system-status-head-actions">
+                  <button type="button" id="system-status-help" aria-haspopup="dialog" aria-controls="system-help-modal">Інструкції</button>
+                  <button type="button" id="system-status-refresh">Оновити</button>
+                </div>
+              </div>
+              <div class="system-status-grid">
+                <div id="system-quick-scroll-card" class="system-quick-scroll-card">
+                  <span>Кнопки швидкої прокрутки</span>
+                  <strong id="system-quick-scroll-value" aria-live="polite">Увімкнено</strong>
+                  <button type="button" id="system-quick-scroll-toggle" aria-controls="quick-scroll-controls" aria-pressed="true">Вимкнути</button>
+                  <button type="button" id="system-quick-scroll-settings-toggle" aria-controls="system-quick-scroll-settings" aria-expanded="false">Показати налаштування</button>
+                  <div id="system-quick-scroll-settings" class="quick-scroll-settings" hidden>
+                  <span id="system-quick-scroll-position-label" class="quick-scroll-position-label">Позиція — Ліворуч</span>
+                  <button type="button" id="system-quick-scroll-position" aria-controls="quick-scroll-controls" aria-label="Змінити позицію швидкої прокрутки. Зараз ліворуч; натисніть, щоб перемістити праворуч.">Змінити позицію</button>
+                  <span id="system-quick-scroll-height-label" class="quick-scroll-height-label">Висота — <strong id="system-quick-scroll-height-value">50%</strong></span>
+                  <button type="button" id="system-quick-scroll-height-change" aria-haspopup="dialog" aria-controls="quick-scroll-height-modal">Змінити висоту</button>
+                  <span id="system-quick-scroll-width-label" class="quick-scroll-width-label">Ширина — <strong id="system-quick-scroll-width-value">0%</strong></span>
+                  <button type="button" id="system-quick-scroll-width-change" aria-haspopup="dialog" aria-controls="quick-scroll-width-modal">Змінити ширину</button>
+                  <span id="system-quick-scroll-size-label" class="quick-scroll-size-label">Розмір — <strong id="system-quick-scroll-size-value">7 × 31 px</strong></span>
+                  <button type="button" id="system-quick-scroll-size-change" aria-haspopup="dialog" aria-controls="quick-scroll-size-modal">Змінити розмір</button>
+                  <small id="system-quick-scroll-hint">Висота: від 0% до 100%. 0% — нижній край, 50% — середина екрана, 100% — верхній край. Можна вводити десяті частки, наприклад 2,5%<br>Ширина: від 0% до 100%. 0% — вибраний край, 50% — центр екрана, 100% — протилежний край. Можна вводити десяті частки, наприклад 2,5%<br>Налаштування зберігаються в резервній копії профілю</small>
+                  </div>
+                </div>
+                <div class="av-sessions-status-card">
+                  <span id="av-my-sessions-title">Мої сеанси входу</span>
+                  <div id="av-my-sessions-list" class="av-session-list" aria-live="polite">Завантаження сеансів</div>
+                  <small class="av-session-legend">Зелений — поточний або активний; червоний — неактивний/завершений. Завершені сеанси приховуються через 24 години</small>
+                </div>
+                <div id="system-storage-card"><span>Локальне сховище</span><strong id="system-storage">—</strong><small id="system-storage-note">Квота визначається браузером</small></div>
+                <div class="system-storage-breakdown"><span>Використання сховища за розділами</span><small class="storage-breakdown-note">Орієнтовний розмір JSON-даних за розділами (включно з архівом тренувань). Не є фізично зайнятим місцем D1 або IndexedDB</small><div id="system-storage-breakdown" class="storage-breakdown-list" aria-live="polite">Обчислення</div></div>
+                <div><span>Версія сайту</span><strong id="system-version">v262</strong><small id="system-site-latest" class="version-current-state" aria-live="polite">Перевірка версії</small></div>
+                <div><span>Мережа</span><strong id="system-network" class="system-network-indicator" aria-live="polite">—</strong></div>
+                <div><span>Сервер</span><strong id="system-worker">—</strong><small id="system-worker-latest" class="version-current-state" aria-live="polite">Перевірка сервера</small></div>
+                <div class="av-total-sync-card" id="system-total-sync-card">
+                  <span>Синхронізація всього сайту</span>
+                  <strong id="system-total-sync" class="av-sync-state is-unknown" aria-live="polite"><i aria-hidden="true"></i><span>Очікування перевірки</span></strong>
+                  <button type="button" id="system-sync-details-open" aria-haspopup="dialog" aria-controls="system-sync-details-modal">Переглянути детально</button>
+                  <small>КБЖВ-дані та тренування · цей пристрій і Cloudflare D1</small>
+                </div>
+                <div><span>Скасування дій</span><strong id="system-undo">0/3</strong></div>
+                <div class="system-compare-card"><span>Порівняння копій</span><strong id="system-copy-comparison">Очікування перевірки</strong><small id="system-copy-details">Дані пристрою та сервера</small></div>
+              </div>
+              <div class="system-sync-actions">
+                <button type="button" id="sync-now">Синхронізувати зараз</button>
+                <button type="button" id="sync-check" title="Лише перевіряє стан даних; нічого не записує на сервер">Перевірити синхронізацію</button>
+                <button type="button" id="sync-v2-migrate" hidden title="Лише для акаунтів, які ще не активували поштучну синхронізацію">Перейти на поштучну синхронізацію</button>
+                <button type="button" id="sync-use-server" hidden>Взяти дані із сервера</button>
+                <button type="button" id="sync-use-local" hidden>Зберегти дані цього пристрою</button>
+              </div>
+              <p id="system-sync-note" class="system-sync-note">Синхронізація зберігає основні дані акаунта між пристроями</p>
+            </section>
+            <div class="console-reset-actions">
+              <button type="button" id="undo-last-action">Повернути дію</button>
+              <button type="button" id="refresh-site">Оновити сайт</button>
+              <div class="console-actions-divider" aria-hidden="true"></div>
+              <button type="button" id="logout-account">Вийти</button>
+              <button type="button" id="clear-site">Очистити сайт</button>
+              <button type="button" id="delete-account">Видалити акаунт</button>
+            </div>
+          </section>
+        </main>
+        <footer class="site-footer">
+          © 2026 Усі права захищено · Власник, програміст та дизайнер —
+          <strong>Батик Антоній Віталійович · Monderight</strong>
+        </footer>
+      </div>
+    </section>
+
+    <section class="page" id="archive">
+      <div class="wrap">
+        <header>
+          <h1>Архів, статистика, підсумки КБЖВ та поточні дані сайту:</h1>
+          <p class="lead">Тут зберігається ваша статистика, поточні дані сайту та історія</p>
+        </header>
+        <main>
+          <section class="tracker archive-statistics">
+            <h2>Статистика:</h2>
+            <div class="stats-controls">
+              <div class="stats-metrics" id="stats-metrics">
+                <button type="button" class="stats-metric active" data-metric="kcal">Калорії</button>
+                <button type="button" class="stats-metric" data-metric="protein">Білки</button>
+                <button type="button" class="stats-metric" data-metric="fat">Жири</button>
+                <button type="button" class="stats-metric" data-metric="carb">Вуглеводи</button>
+                <button type="button" class="stats-metric" data-metric="sugar">Цукри</button>
+                <button type="button" class="stats-metric" data-metric="salt">Сіль</button>
+                <button type="button" class="stats-metric" data-metric="fiber">Клітковина</button>
+                <div class="stats-goal-row">
+                  <label class="stats-chart-goal-option" for="stats-chart-goal" title="Показувати або приховувати лінію денної цілі на графіку"><input type="checkbox" id="stats-chart-goal" checked><span>Ціль</span></label>
+                </div>
+              </div>
+              <div class="stats-dates" aria-label="Період статистики">
+                <label class="stats-date-field" for="stats-from"><span>Від:</span><input type="date" id="stats-from"></label>
+                <div class="stats-date-to-group">
+                  <div class="stats-date-to-head"><label for="stats-to">До:</label><label class="stats-today-option" title="Автоматично використовувати поточну дату"><input type="checkbox" id="stats-to-today"><span>Сьогодні</span></label></div>
+                  <input type="date" id="stats-to" aria-label="До дати включно">
+                </div>
+              </div>
+            </div>
+            <div class="stats-chart-wrap">
+              <canvas id="stats-chart" width="900" height="360"></canvas>
+              <button type="button" id="stats-fullscreen-open" class="stats-fullscreen-open" title="Розгорнути графік горизонтально" aria-label="Повноекранний графік">⛶</button>
+              <div id="stats-empty" class="stats-empty">За вибраний період немає записів архіву</div>
+              <div id="stats-tooltip" class="stats-tooltip" aria-live="polite"></div>
+            </div>
+            <div id="stats-range-summary" class="stats-range-summary" aria-live="polite">—</div>
+            <div class="stats-visibility-toggles" aria-label="Відображення розділів архіву">
+              <button type="button" id="site-data-toggle">Сховати поточні дані сайту</button>
+              <button type="button" id="archive-note-toggle" aria-controls="archive-note-section" aria-expanded="false">Показати нотатку</button>
+            </div>
+          </section>
+          <section class="tracker archive-site-info" id="archive-site-info">
+            <h2>Поточні дані сайту:</h2>
+            <div id="site-data-content">
+              <div id="stats-month-summary" class="stats-month-summary">—</div>
+              <div id="stats-average-label" class="stats-average-label">Середнє значення: Калорії</div>
+              <div class="archive-averages" aria-label="Середнє значення вибраного показника">
+                <div class="archive-average-card"><span>7 днів</span><strong id="avg-kcal-7">—</strong><small id="avg-kcal-7-note">Немає даних</small></div>
+                <div class="archive-average-card"><span>14 днів</span><strong id="avg-kcal-14">—</strong><small id="avg-kcal-14-note">Немає даних</small></div>
+                <div class="archive-average-card"><span>30 днів</span><strong id="avg-kcal-30">—</strong><small id="avg-kcal-30-note">Немає даних</small></div>
+              </div>
+
+            </div>
+          </section>
+          <section class="tracker archive-note-section" id="archive-note-section" hidden>
+            <h2>Нотатка:</h2>
+            <div id="archive-note-display" class="archive-note-text archive-note-display" role="note" aria-label="Текст нотатки архіву" tabindex="0">Нотатка порожня</div>
+            <textarea id="archive-note-text" class="archive-note-text" aria-label="Редагування нотатки архіву" placeholder="Нотатка порожня" maxlength="500" rows="1" autocomplete="off" autocapitalize="off" spellcheck="false" hidden></textarea>
+            <div id="archive-note-limit-warning" class="archive-note-limit-warning" role="alert" aria-live="assertive" hidden>Ліміт нотатки — 500 символів. Далі вводити неможливо</div>
+            <div class="archive-note-actions">
+              <button type="button" id="archive-note-edit" aria-pressed="false">Редагувати</button>
+              <button type="button" id="archive-note-paste">Вставити</button>
+              <button type="button" id="archive-note-clear">Очистити</button>
+              <button type="button" id="archive-note-copy">Скопіювати</button>
+            </div>
+          </section>
+          <section class="tracker archive-history">
+            <h2>Історія:</h2>
+            <div class="archive-search">
+              <div class="search-wrapper">
+                <input type="text" id="archive-search" placeholder="Пошук в архіві..." autocomplete="off">
+                <button type="button" id="archive-search-clear" class="archive-search-clear av-search-clear-button" aria-label="Очистити пошук" disabled><span class="av-search-clear-glyph" aria-hidden="true">✕</span></button>
+              </div>
+              <div id="archive-search-status" class="archive-search-status">Показано всі записи</div>
+            </div>
+            <div id="archive-log"></div>
+          </section>
+        </main>
+        <footer class="site-footer">
+          © 2026 Усі права захищено · Власник, програміст та дизайнер —
+          <strong>Батик Антоній Віталійович · Monderight</strong>
+        </footer>
+      </div>
+    </section>
+
+    <section class="page" id="about" aria-labelledby="av-about-title">
+      <div class="wrap">
+        <header>
+          <h1 id="av-about-title">Чому саме Avicularia?</h1>
+          <p class="lead">Історія назви платформи, деревні птахоїди та цікаві факти про них</p>
+        </header>
+        <main>
+          <section class="tracker av-about-panel">
+            <h2 class="av-about-panel-title">Історія назви та натхнення:</h2>
+            <article class="av-about-page av-about-box">
+<section class="av-about-section">
+<h3>Про назву</h3>
+<p><strong>Avicularia</strong> — це назва персональної цифрової платформи, у якій зібрані інструменти для обліку харчування, тренувань і повсякденних розрахунків. Назва не випадкова: автор цікавиться павуками-птахоїдами, їхнім зовнішнім виглядом, природною різноманітністю та особливостями утримання</p>
+      <p>За основу назви взято <em>Avicularia</em> — науковий <strong>рід</strong> павуків родини Theraphosidae. Це не один окремий вид, а група споріднених видів, відомих насамперед деревним способом життя. У природі представники роду мешкають переважно в тропічних районах Центральної та Південної Америки. Від виду до виду відрізняються забарвлення, будова, ареал і поведінкові особливості</p>
+      <p>Деревний спосіб життя означає, що більшість таких павуків проводить значну частину часу не на відкритому ґрунті, а на рослинності та у схованках над землею. Вони використовують павутину для облаштування сховків, мають виразну будову кінцівок і можуть демонструвати зовсім інші кольори під різним освітленням. Саме поєднання незвичайної форми, барвистого вигляду й різноманітності привернуло увагу автора</p>
+      <p>Таксономія птахоїдів змінюється в міру нових досліджень. Тому старі назви, які трапляються у відео, магазинах і на фотографіях, не завжди відповідають сучасній науковій класифікації. У цьому розділі використано назви, наведені у World Spider Catalog; за оновленням систематики слід звертатися до відповідного каталогу</p>
+</section>
+<section class="av-about-section">
+<h3>Усі 12 визнаних видів роду Avicularia</h3>
+      <p>Нижче наведено повний перелік видів роду, прийнятих у каталозі: <em>Avicularia avicularia, A. caei, A. glauca, A. hirschii, A. juruensis, A. lynnae, A. merianae, A. minatrix, A. purpurea, A. rufa, A. taunayi</em> і <em>A. variegata</em>. Кожна назва є окремим науковим видом, а не кольоровою формою одного павука</p>
+      <p>Перелік охоплює 12 визнаних видів у наведеній версії систематики. Для точного визначення виду слід використовувати наукові описи, а не лише колір або випадкові фотографії</p>
+</section>
+<section class="av-about-section">
+<h3>Улюблений павук автора — Caribena versicolor</h3>
+      <p>Найбільше автору подобається <strong><em>Caribena versicolor</em></strong> — відомий у минулому під назвою <em>Avicularia versicolor</em>. Під час перегляду старих джерел можна зустріти обидва варіанти, але сучасна назва належить роду <em>Caribena</em>. Ця таксономічна зміна не впливає на історію назви платформи Avicularia</p>
+      <p>Цей вид особливо приваблює автора насиченими кольорами: молоді павуки можуть мати яскравий синій відтінок, тоді як із віком з'являються складніші поєднання зеленого, червонуватого, фіолетового й інших кольорів. Зовнішній вигляд змінюється протягом росту, а колір на фото залежить від освітлення та стадії розвитку</p>
+</section>
+<section class="av-about-section">
+<h3>Avicularia purpurea — фіолетовий птахоїд</h3>
+      <p><em>Avicularia purpurea</em> — окремий вид деревного птахоїда, відомий фіолетовим полиском, особливо помітним за певного освітлення. Його не слід плутати з <em>Caribena versicolor</em>: назви можуть нагадувати одна одну історично, але це різні види, які сьогодні відносять до різних родів</p>
+      <p>Зовнішнє забарвлення саме по собі не є надійним способом визначити вид. Для розпізнавання важливі походження, будова та науковий опис, а спостереження за кольором залежить від освітлення, віку та линяння</p>
+</section>
+<section class="av-about-section">
+<h3>Цікаві факти про Avicularia та їхніх родичів</h3>
+      <p><strong>Деревні схованки</strong> — багато представників цієї групи облаштовують павутинні укриття між листям, корою та гілками. Павутина тут потрібна не для великої ловчої сітки, а передусім для захисту, опори та сигналів про рух поблизу</p>
+      <p><strong>Ріст через линяння</strong> — павук не росте безперервно: його зовнішній скелет періодично змінюється. Молоді особини линяють частіше, а після линяння новий покрив певний час залишається м’яким і вразливим</p>
+      <p><strong>Зміна кольору</strong> — у деяких деревних птахоїдів забарвлення молоді дуже відрізняється від дорослих. Особливо яскравий приклад — <em>Caribena versicolor</em>, яку раніше відносили до <em>Avicularia</em></p>
+      <p><strong>Відчуття вібрацій</strong> — павуки сприймають рух і коливання через чутливі волоски й рецептори на кінцівках, тому їм не потрібна людська гострота зору, щоб помітити здобич</p>
+      <p><strong>Нитка як страховка</strong> — під час пересування деревні птахоїди можуть використовувати шовкові нитки як опору. Водночас ці павуки не вміють літати, а падіння з великої висоти може бути небезпечним</p>
+      <p><strong>Наукові назви змінюються</strong> — види іноді переносять до інших родів після дослідження будови й спорідненості. Саме так назва <em>Avicularia versicolor</em> стала історичним синонімом сучасної <em>Caribena versicolor</em></p>
+      <p><strong>Не всі види однакові</strong> — навіть близькоспоріднені птахоїди можуть мати різні розміри, ареали, темпи росту та поведінку. Назва роду сама по собі не означає однакових вимог до утримання</p>
+      <h4 class="av-photo-comparison-title">Художнє AI-зображення павука</h4>
+      <p>Нижче — створене штучним інтелектом художнє зображення павука, що передає натхнення оформлення Avicularia. Це не фотографія реальної тварини та не поточна іконка застосунку.</p>
+      <figure class="av-app-preview">
+        <div class="av-preview-image"><img src="./icon-preview.png" width="512" height="512" loading="lazy" decoding="async" alt="Створене штучним інтелектом художнє зображення павука"></div>
+        <figcaption>AI-ілюстрація павука — творче зображення, збережене в матеріалах сайту.</figcaption>
+      </figure>
+      <h4 class="av-photo-comparison-title">Справжній павук Caribena versicolor</h4>
+      <p>А нижче — справжня фотографія Caribena versicolor із Wikimedia Commons. Це окремий від AI-ілюстрації знімок реального павука.</p>
+      <div id="av-favorite-gallery" class="av-spider-gallery av-favorite-gallery"></div>
+      <p>Отже, назва <strong>Avicularia</strong> — це особисте відсилання до захоплення автора павуками, а не твердження про те, що платформа пов'язана з біологією або продажем тварин. Назву обрано за її звучання, впізнаваність і зв'язок із улюбленим птахоїдом</p>
+      <p class="av-photo-note">Фотографія реального павука: Wikimedia Commons, посилання на сторінку файлу відкриває автора й умови використання; для завантаження потрібен інтернет. Іконка програми завантажується з файлів цього сайту</p>
+      <p>Таксономічні джерела: <a href="https://wsc.nmbe.ch/species-list/3504/Avicularia" target="_blank" rel="noopener noreferrer">World Spider Catalog — Avicularia</a> та <a href="https://wsc.nmbe.ch/" target="_blank" rel="noopener noreferrer">World Spider Catalog</a></p>
+</section>
+            </article>
+          </section>
+        </main>
+      </div>
+    </section>
+
+    <section class="page" id="admin">
+      <div class="wrap">
+        <header>
+          <h1>Адмін:</h1>
+          <p class="lead">Користувачі, ролі, реєстрації, фактичні відвідування сайту та повна історія активності</p>
+        </header>
+        <main>
+          <section class="tracker admin-panel">
+            <div class="admin-toolbar">
+              <div class="admin-current-user">Адміністратор: <strong id="admin-current-username">—</strong></div>
+              <div class="admin-toolbar-actions">
+                <button type="button" id="admin-open-users">Користувачі</button>
+                <button type="button" id="admin-refresh">Оновити</button>
+              </div>
+            </div>
+            <div class="admin-summary">
+              <div>Усього користувачів: <strong id="admin-users-count">0</strong></div>
+              <div>Адміністраторів: <strong id="admin-admins-count">0</strong></div>
+              <div>Учасників: <strong id="admin-members-count">0</strong></div>
+            </div>
+            <div id="admin-status" class="admin-status">Дані ще не завантажено</div>
+            <div id="admin-owner-note" class="admin-owner-note" hidden>Лише головний адміністратор може керувати ролями, видаляти акаунти, відновлювати доступ і експортувати повні дані користувачів</div>
+            <div id="admin-users-list" class="admin-users-list"></div>
+            <!-- Контейнер для запитів: видимі сеанси рендеряться в картки конкретних користувачів. -->
+            <div id="av-admin-sessions-list" hidden aria-hidden="true"></div>
+
+            <div class="admin-recovery-section">
+              <div class="admin-audit-heading">
+                <h3>Запити на відновлення доступу:</h3>
+                <span>Запитів: <strong id="admin-recovery-count">0</strong></span>
+              </div>
+              <div id="admin-recovery-status" class="admin-status">Запити ще не завантажено</div>
+              <div id="admin-recovery-list" class="admin-recovery-list"></div>
+            </div>
+
+            <div class="admin-audit-section">
+              <div class="admin-audit-heading">
+                <h3>Історія активності:</h3>
+                <span>Подій: <strong id="admin-audit-count">0</strong></span>
+              </div>
+              <div id="admin-audit-status" class="admin-status">Історія ще не завантажена</div>
+              <div id="admin-audit-list" class="admin-audit-list"></div>
+            </div>
+          </section>
+        </main>
+        <footer class="site-footer">
+          © 2026 Усі права захищено · Власник, програміст та дизайнер —
+          <strong>Батик Антоній Віталійович · Monderight</strong>
+        </footer>
+      </div>
+    </section>
+  </div>
+
+  <div id="utility-jump-modal" class="product-modal utility-picker-modal" role="dialog" aria-modal="true" aria-labelledby="utility-jump-title">
+    <div class="product-modal-box utility-picker-box">
+      <h2 class="product-modal-title" id="utility-jump-title">Виберіть зручність:</h2>
+      <div id="utility-jump-options" class="utility-picker-list"></div>
+      <div class="utility-picker-divider" aria-hidden="true"></div><div class="product-modal-actions"><button id="utility-jump-close" type="button">Закрити</button></div>
+    </div>
+  </div>
+  <div id="utility-archive-modal" class="product-modal utility-picker-modal" role="dialog" aria-modal="true" aria-labelledby="utility-archive-title">
+    <div class="product-modal-box utility-picker-box">
+      <h2 class="product-modal-title" id="utility-archive-title">Вибір дня з КБЖВ Архіву:</h2>
+      <label class="utility-field" for="utility-archive-search">Пошук за датою:
+        <input id="utility-archive-search" type="search" inputmode="search" autocomplete="off" placeholder="ДД.ММ.РРРР або РРРР-ММ-ДД">
+      </label>
+      <p class="utility-description" id="utility-archive-count" role="status"></p>
+      <div id="utility-archive-list" class="utility-picker-list utility-product-list"></div>
+      <div class="product-modal-actions"><button id="utility-archive-close" type="button">Закрити</button></div>
+    </div>
+  </div>
+  <div id="utility-product-modal" class="product-modal utility-picker-modal" role="dialog" aria-modal="true" aria-labelledby="utility-product-title">
+    <div class="product-modal-box utility-picker-box">
+      <h2 class="product-modal-title" id="utility-product-title">Вибір продукту з КБЖВ Блоків:</h2>
+      <label class="utility-field" for="utility-product-search">Пошук за назвою:
+        <input id="utility-product-search" type="search" inputmode="search" autocomplete="off" placeholder="Пошук продукту...">
+      </label>
+      <p class="utility-description" id="utility-product-count" role="status"></p>
+      <div id="utility-product-list" class="utility-picker-list utility-product-list"></div>
+      <div class="product-modal-actions"><button id="utility-product-close" type="button">Закрити</button></div>
+    </div>
+  </div>
+  <div id="product-modal" class="product-modal">
+    <div class="product-modal-box">
+      <div class="product-modal-title"><span id="product-modal-name">Продукт</span></div>
+      <div class="product-modal-weight">
+        <label for="product-weight">Введіть вагу продукту у грамах:</label>
+        <input type="number" id="product-weight" min="0.1" step="0.1" inputmode="decimal" placeholder="Вага у грамах">
+      </div>
+      <div id="product-quick-weights" class="product-quick-weights" hidden></div>
+      <div class="av-copy-weights-divider" aria-hidden="true"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="product-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="product-copy">Скопіювати</button>
+        <button type="button" id="product-calculator">До калькулятора</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="av-gallery-lightbox" class="av-gallery-lightbox" role="dialog" aria-modal="true" aria-label="Повноекранний перегляд фотографії" hidden>
+    <div class="av-gallery-lightbox-toolbar">
+      <span id="av-gallery-lightbox-label">Фото продукту</span>
+      <div class="av-gallery-lightbox-controls">
+        <button type="button" id="av-gallery-lightbox-minus" aria-label="Зменшити масштаб">−</button>
+        <button type="button" id="av-gallery-lightbox-reset" aria-label="Повернути масштаб 100%">100%</button>
+        <button type="button" id="av-gallery-lightbox-plus" aria-label="Збільшити масштаб">+</button>
+        <button type="button" id="av-lightbox-ready" hidden>Додати продукт</button><button type="button" id="av-gallery-lightbox-close">Закрити</button>
+      </div>
+    </div>
+    <div id="av-gallery-lightbox-stage" class="av-gallery-lightbox-stage" tabindex="0" aria-label="Зображення можна збільшувати і пересувати">
+      <div id="av-gallery-lightbox-frame" class="av-gallery-lightbox-frame">
+        <img id="av-gallery-lightbox-image" draggable="false" alt="Збільшена фотографія продукту">
+      </div>
+    </div>
+  </div>
+  <div id="av-product-choice" class="product-modal" role="dialog" aria-modal="true" aria-labelledby="av-product-choice-title">
+    <div class="product-modal-box av-product-choice-box">
+      <div id="av-product-choice-title" class="product-modal-title">Як ви бажаєте додати продукт</div>
+      <p class="av-product-choice-subtitle">Оберіть спосіб додавання продукту:</p>
+      <div class="av-choice-layout">
+        <div class="av-product-choice-tree" aria-label="Способи додавання продукту">
+          <div class="av-choice-branch"><button type="button" id="av-choice-quick">Швидко</button></div>
+          <div class="av-choice-branch"><button type="button" id="av-choice-ready">Вручну</button></div>
+          <div class="av-choice-branch"><button type="button" id="av-choice-plan">Запланувати</button></div>
+          <div class="av-choice-end"><button type="button" id="av-choice-cancel" class="product-action-cancel">Скасувати</button></div>
+        </div>
+        <div class="av-choice-meme" aria-label="Мем (до 33 доступних фото), змінюється кожні дві години або за натисканням кнопки">
+          <img id="av-choice-meme-img" alt="Мем" width="160" height="160" decoding="async">
+        </div>
+        <div class="av-choice-refresh-guide">
+          <button type="button" id="av-choice-meme-next" class="av-choice-meme-next" aria-label="Наступний мем" title="Показати наступний мем">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 11a8 8 0 0 0-14.9-4M4 4v4h4M4 13a8 8 0 0 0 14.9 4M20 20v-4h-4"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="av-quick-modal" class="product-modal" role="dialog" aria-modal="true" aria-labelledby="av-quick-title">
+    <div class="product-modal-box av-quick-box">
+      <div class="product-modal-title" id="av-quick-title">Швидке додавання продукту</div>
+      <p class="av-quick-subtitle">Вставте один рядок AVP2: замініть # значеннями продукту. Невідомі показники — НД, відсутні швидкі ваги — «-». Шаблон:</p>
+      <p class="av-quick-template"><code>@AVP2|Н=#|Г=#|К=#|Б=#|Ж=#|В=#|Ц=#|С=#|КЛ=#|Р=#|ШВ=#;#;#;#|О=#</code></p>
+      <div id="av-quick-display" class="archive-note-text archive-note-display archive-note-empty" role="note" tabindex="0" aria-label="Текст для швидкого імпорту AVP2">Дані ще не введені</div>
+      <textarea id="av-quick-text" class="archive-note-text" rows="3" autocapitalize="off" autocomplete="off" spellcheck="false" aria-label="Введення рядка AVP2" placeholder="Вставте один рядок @AVP2|..." hidden></textarea>
+      <div class="av-quick-actions">
+        <div class="av-quick-actions-row">
+          <button type="button" id="av-quick-edit" aria-pressed="false">Редагувати</button>
+          <button type="button" id="av-quick-paste" title="Спочатку натисніть «Редагувати»">Вставити</button>
+          <button type="button" id="av-quick-copy">Скопіювати</button>
+        </div>
+        <div class="av-quick-actions-row">
+          <button type="button" id="av-quick-clear">Очистити</button>
+          <button type="button" id="av-quick-apply">Провести та додати</button>
+        </div>
+      </div>
+      <p id="av-quick-status" class="av-quick-status" role="status" aria-live="polite" hidden></p>
+      <div class="av-quick-divider" aria-hidden="true"></div>
+      <div class="av-quick-cancel-row"><button type="button" id="av-quick-cancel" class="product-action-cancel">Скасувати</button></div>
+    </div>
+  </div>
+  <div id="add-product-modal" class="product-modal">
+    <div class="product-modal-box add-product-modal-box">
+      <div id="av-add-modal-title" class="product-modal-title">Додати продукт</div>
+      <button type="button" id="av-switch-product-mode" class="av-switch-product-mode">Перейти до запланованих →</button>
+      <p id="av-plan-quota-hint" class="av-plan-quota-hint" hidden>Можна запланувати до 30 продуктів, але не більше 30 фотографій загалом.</p>
+      <div id="av-planned-list" class="av-planned-list" hidden aria-label="Заплановані продукти"></div>
+      <div id="av-plan-form-divider" class="av-plan-form-divider" hidden aria-hidden="true"></div>
+      <div id="av-plan-add-label" class="av-plan-add-label" hidden>Додати до запланованих:</div>
+      <div id="av-ready-reference" class="av-ready-reference" hidden></div>
+      <div class="add-product-form">
+        <div class="add-product-field av-product-name-row">
+          <div class="field-label-row"><label for="new-product-name">Назва продукту:</label><label class="no-data-option" for="new-product-name-later"><input type="checkbox" id="new-product-name-later"><span>Пізніше</span></label></div>
+          <input type="text" id="new-product-name" placeholder="Уведіть назву продукту...">
+        </div>
+        <div class="add-product-field av-ready-only">
+          <div class="field-label-row"><label for="new-product-kcal">Калорії на 100 г:</label><label class="no-data-option"><input type="checkbox" id="new-product-kcal-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="new-product-kcal" min="0" step="0.001" placeholder="0">
+        </div>
+        <div class="add-product-field av-ready-only">
+          <div class="field-label-row"><label for="new-product-protein">Білки на 100 г:</label><label class="no-data-option"><input type="checkbox" id="new-product-protein-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="new-product-protein" min="0" step="0.001" placeholder="0">
+        </div>
+        <div class="add-product-field av-ready-only">
+          <div class="field-label-row"><label for="new-product-fat">Жири на 100 г:</label><label class="no-data-option"><input type="checkbox" id="new-product-fat-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="new-product-fat" min="0" step="0.001" placeholder="0">
+        </div>
+        <div class="add-product-field av-ready-only">
+          <div class="field-label-row"><label for="new-product-carb">Вуглеводи на 100 г:</label><label class="no-data-option"><input type="checkbox" id="new-product-carb-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="new-product-carb" min="0" step="0.001" placeholder="0">
+        </div>
+        <div class="add-product-field av-ready-only">
+          <div class="field-label-row"><label for="new-product-sugar">Цукри на 100 г:</label><label class="no-data-option"><input type="checkbox" id="new-product-sugar-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="new-product-sugar" min="0" step="0.001" placeholder="0">
+        </div>
+        <div class="add-product-field av-ready-only">
+          <div class="field-label-row"><label for="new-product-salt">Сіль на 100 г:</label><label class="no-data-option"><input type="checkbox" id="new-product-salt-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="new-product-salt" min="0" step="0.001" placeholder="0">
+        </div>
+        <div class="add-product-field av-ready-only">
+          <div class="field-label-row"><label for="new-product-fiber">Клітковина на 100 г:</label><label class="no-data-option"><input type="checkbox" id="new-product-fiber-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="new-product-fiber" min="0" step="0.001" placeholder="0">
+        </div>
+        <div class="add-product-field av-ready-only">
+          <label for="new-product-category">Відділ продукту:</label>
+          <select id="new-product-category" required></select>
+        </div>
+        <div class="add-product-field av-ready-only">
+          <label>Швидкі ваги, г <span class="field-optional">(необов’язково, до 4)</span>:</label>
+          <div class="quick-weight-inputs">
+            <input type="number" class="new-product-quick-weight" min="0.1" step="0.1" inputmode="decimal" placeholder="---">
+            <input type="number" class="new-product-quick-weight" min="0.1" step="0.1" inputmode="decimal" placeholder="---">
+            <input type="number" class="new-product-quick-weight" min="0.1" step="0.1" inputmode="decimal" placeholder="---">
+            <input type="number" class="new-product-quick-weight" min="0.1" step="0.1" inputmode="decimal" placeholder="---">
+          </div>
+        </div>
+        <div class="add-product-field av-ready-only">
+          <div class="field-label-row"><label for="new-product-description">Опис продукту:</label><label class="no-data-option"><input type="checkbox" id="new-product-description-no-data"><span>Немає даних</span></label></div>
+          <textarea id="new-product-description" placeholder="Уведіть опис продукту..."></textarea>
+        </div>
+        <div class="add-product-field av-gallery-field" id="new-gallery-widget">
+          <div class="field-label-row av-gallery-label-row">
+            <label class="av-gallery-title">Галерея:</label>
+            <div class="av-gallery-options">
+              <label class="no-data-option av-gallery-show-label"><input type="checkbox" id="new-gallery-visible"><span id="new-gallery-visible-text">Показати</span></label>
+              <label class="no-data-option"><input type="checkbox" id="new-gallery-no-data"><span>Немає даних</span></label>
+            </div>
+          </div>
+          <div class="av-gallery-slots" id="new-gallery-slots" hidden>
+            <section class="av-gallery-slot" data-gallery-slot="0">
+              <div class="av-slot-caption">1. Головне фото продукту:</div>
+              <button type="button" class="av-gallery-preview" aria-label="Відкрити камеру для фотографії 1"><video autoplay muted playsinline hidden></video><img alt="Фото 1" hidden><span class="av-gallery-start-icon" aria-hidden="true">Натисніть, щоб увімкнути камеру</span></button>
+              <div class="av-gallery-zoom" hidden><button type="button" class="av-gallery-zoom-out" aria-label="Віддалити камеру">−</button><span class="av-gallery-zoom-value">1×</span><button type="button" class="av-gallery-zoom-in" aria-label="Наблизити камеру">+</button></div><button type="button" class="av-gallery-shoot" aria-label="Сфотографувати" title="Сфотографувати" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12.7" r="3.1" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+              <button type="button" class="av-gallery-remove" aria-label="Видалити фото" title="Видалити фото" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 7h14M9 7V5h6v2m2 0-.8 12H7.8L7 7m3 4v5m4-5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </section><section class="av-gallery-slot" data-gallery-slot="1">
+              <div class="av-slot-caption">2. Харчова цінність:</div>
+              <button type="button" class="av-gallery-preview" aria-label="Відкрити камеру для фотографії 2"><video autoplay muted playsinline hidden></video><img alt="Фото 2" hidden><span class="av-gallery-start-icon" aria-hidden="true">Натисніть, щоб увімкнути камеру</span></button>
+              <div class="av-gallery-zoom" hidden><button type="button" class="av-gallery-zoom-out" aria-label="Віддалити камеру">−</button><span class="av-gallery-zoom-value">1×</span><button type="button" class="av-gallery-zoom-in" aria-label="Наблизити камеру">+</button></div><button type="button" class="av-gallery-shoot" aria-label="Сфотографувати" title="Сфотографувати" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12.7" r="3.1" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+              <button type="button" class="av-gallery-remove" aria-label="Видалити фото" title="Видалити фото" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 7h14M9 7V5h6v2m2 0-.8 12H7.8L7 7m3 4v5m4-5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </section><section class="av-gallery-slot av-legacy-photo-slot" data-gallery-slot="2" hidden>
+              <div class="av-slot-caption">Раніше збережене третє фото (можна видалити)</div>
+              <button type="button" class="av-gallery-preview" aria-label="Відкрити камеру для фотографії 3"><video autoplay muted playsinline hidden></video><img alt="Фото 3" hidden><span class="av-gallery-start-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12.7" r="3.1" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></button>
+              <button type="button" class="av-gallery-shoot" aria-label="Сфотографувати" title="Сфотографувати" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12.7" r="3.1" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+              <button type="button" class="av-gallery-remove" aria-label="Видалити фото" title="Видалити фото" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 7h14M9 7V5h6v2m2 0-.8 12H7.8L7 7m3 4v5m4-5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </section>
+          </div>
+          <div class="av-gallery-message" id="new-gallery-message" role="status"></div>
+        </div>
+      </div>
+      <div class="product-modal-actions">
+        <button type="button" id="add-product-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="add-product-save">Зберегти</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="edit-product-modal" class="product-modal">
+    <div class="product-modal-box add-product-modal-box">
+      <div class="product-modal-title">Редагувати продукт</div>
+      <div class="add-product-form">
+        <div class="add-product-field">
+          <div class="field-label-row"><label for="edit-product-name">Назва продукту:</label><label class="no-data-option" for="edit-product-name-later"><input type="checkbox" id="edit-product-name-later"><span>Пізніше</span></label></div>
+          <input type="text" id="edit-product-name">
+        </div>
+        <div class="add-product-field">
+          <div class="field-label-row"><label for="edit-product-kcal">Калорії на 100 г:</label><label class="no-data-option"><input type="checkbox" id="edit-product-kcal-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="edit-product-kcal" min="0" step="0.001">
+        </div>
+        <div class="add-product-field">
+          <div class="field-label-row"><label for="edit-product-protein">Білки на 100 г:</label><label class="no-data-option"><input type="checkbox" id="edit-product-protein-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="edit-product-protein" min="0" step="0.001">
+        </div>
+        <div class="add-product-field">
+          <div class="field-label-row"><label for="edit-product-fat">Жири на 100 г:</label><label class="no-data-option"><input type="checkbox" id="edit-product-fat-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="edit-product-fat" min="0" step="0.001">
+        </div>
+        <div class="add-product-field">
+          <div class="field-label-row"><label for="edit-product-carb">Вуглеводи на 100 г:</label><label class="no-data-option"><input type="checkbox" id="edit-product-carb-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="edit-product-carb" min="0" step="0.001">
+        </div>
+        <div class="add-product-field">
+          <div class="field-label-row"><label for="edit-product-sugar">Цукри на 100 г:</label><label class="no-data-option"><input type="checkbox" id="edit-product-sugar-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="edit-product-sugar" min="0" step="0.001">
+        </div>
+        <div class="add-product-field">
+          <div class="field-label-row"><label for="edit-product-salt">Сіль на 100 г:</label><label class="no-data-option"><input type="checkbox" id="edit-product-salt-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="edit-product-salt" min="0" step="0.001">
+        </div>
+        <div class="add-product-field">
+          <div class="field-label-row"><label for="edit-product-fiber">Клітковина на 100 г:</label><label class="no-data-option"><input type="checkbox" id="edit-product-fiber-no-data"><span>Немає даних</span></label></div>
+          <input type="number" id="edit-product-fiber" min="0" step="0.001">
+        </div>
+        <div class="add-product-field">
+          <label for="edit-product-category">Відділ продукту:</label>
+          <select id="edit-product-category" required></select>
+        </div>
+        <div class="add-product-field">
+          <label>Швидкі ваги, г <span class="field-optional">(необов’язково, до 4)</span>:</label>
+          <div class="quick-weight-inputs">
+            <input type="number" class="edit-product-quick-weight" min="0.1" step="0.1" inputmode="decimal" placeholder="---">
+            <input type="number" class="edit-product-quick-weight" min="0.1" step="0.1" inputmode="decimal" placeholder="---">
+            <input type="number" class="edit-product-quick-weight" min="0.1" step="0.1" inputmode="decimal" placeholder="---">
+            <input type="number" class="edit-product-quick-weight" min="0.1" step="0.1" inputmode="decimal" placeholder="---">
+          </div>
+        </div>
+        <div class="add-product-field">
+          <div class="field-label-row"><label for="edit-product-description">Опис продукту:</label><label class="no-data-option"><input type="checkbox" id="edit-product-description-no-data"><span>Немає даних</span></label></div>
+          <textarea id="edit-product-description"></textarea>
+        </div>
+        <div class="add-product-field av-gallery-field" id="edit-gallery-widget">
+          <div class="field-label-row av-gallery-label-row">
+            <label class="av-gallery-title">Галерея:</label>
+            <div class="av-gallery-options">
+              <label class="no-data-option av-gallery-show-label"><input type="checkbox" id="edit-gallery-visible"><span id="edit-gallery-visible-text">Показати</span></label>
+              <label class="no-data-option"><input type="checkbox" id="edit-gallery-no-data"><span>Немає даних</span></label>
+            </div>
+          </div>
+          <div class="av-gallery-slots" id="edit-gallery-slots" hidden>
+            <section class="av-gallery-slot" data-gallery-slot="0">
+              <div class="av-slot-caption">1. Головне фото продукту:</div>
+              <button type="button" class="av-gallery-preview" aria-label="Відкрити камеру для фотографії 1"><video autoplay muted playsinline hidden></video><img alt="Фото 1" hidden><span class="av-gallery-start-icon" aria-hidden="true">Натисніть, щоб увімкнути камеру</span></button>
+              <div class="av-gallery-zoom" hidden><button type="button" class="av-gallery-zoom-out" aria-label="Віддалити камеру">−</button><span class="av-gallery-zoom-value">1×</span><button type="button" class="av-gallery-zoom-in" aria-label="Наблизити камеру">+</button></div><button type="button" class="av-gallery-shoot" aria-label="Сфотографувати" title="Сфотографувати" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12.7" r="3.1" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+              <button type="button" class="av-gallery-remove" aria-label="Видалити фото" title="Видалити фото" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 7h14M9 7V5h6v2m2 0-.8 12H7.8L7 7m3 4v5m4-5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </section><section class="av-gallery-slot" data-gallery-slot="1">
+              <div class="av-slot-caption">2. Харчова цінність:</div>
+              <button type="button" class="av-gallery-preview" aria-label="Відкрити камеру для фотографії 2"><video autoplay muted playsinline hidden></video><img alt="Фото 2" hidden><span class="av-gallery-start-icon" aria-hidden="true">Натисніть, щоб увімкнути камеру</span></button>
+              <div class="av-gallery-zoom" hidden><button type="button" class="av-gallery-zoom-out" aria-label="Віддалити камеру">−</button><span class="av-gallery-zoom-value">1×</span><button type="button" class="av-gallery-zoom-in" aria-label="Наблизити камеру">+</button></div><button type="button" class="av-gallery-shoot" aria-label="Сфотографувати" title="Сфотографувати" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12.7" r="3.1" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+              <button type="button" class="av-gallery-remove" aria-label="Видалити фото" title="Видалити фото" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 7h14M9 7V5h6v2m2 0-.8 12H7.8L7 7m3 4v5m4-5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </section><section class="av-gallery-slot av-legacy-photo-slot" data-gallery-slot="2" hidden>
+              <div class="av-slot-caption">Раніше збережене третє фото (можна видалити)</div>
+              <button type="button" class="av-gallery-preview" aria-label="Відкрити камеру для фотографії 3"><video autoplay muted playsinline hidden></video><img alt="Фото 3" hidden><span class="av-gallery-start-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12.7" r="3.1" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></button>
+              <button type="button" class="av-gallery-shoot" aria-label="Сфотографувати" title="Сфотографувати" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12.7" r="3.1" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+              <button type="button" class="av-gallery-remove" aria-label="Видалити фото" title="Видалити фото" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 7h14M9 7V5h6v2m2 0-.8 12H7.8L7 7m3 4v5m4-5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </section>
+          </div>
+          <div class="av-gallery-message" id="edit-gallery-message" role="status"></div>
+        </div>
+      </div>
+      <div class="product-modal-actions">
+        <button type="button" id="edit-product-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="edit-product-save">Зберегти</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="archive-composition-modal" class="product-modal">
+    <div class="product-modal-box archive-composition-box">
+      <div class="product-modal-title">Склад денного підсумку</div>
+      <div id="archive-composition-date" class="archive-composition-date"></div>
+      <div id="archive-composition-list" class="archive-composition-list"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="archive-composition-close">Зрозуміло</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="product-order-modal" class="product-modal">
+    <div class="product-modal-box product-order-box">
+      <div class="product-modal-title">Змінити розташування</div>
+      <p class="import-preview-note">Змініть порядок продуктів стрілками ↑ / ↓. Зміни застосуються тільки після натискання «Зберегти»</p>
+      <div id="product-order-list" class="product-order-list"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="product-order-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="product-order-reset" class="product-action-cancel">Скинути</button>
+        <button type="button" id="product-order-save">Зберегти</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="sort-products-modal" class="product-modal">
+    <div class="product-modal-box sort-modal-box">
+      <div class="product-modal-title">Сортувати продукти</div>
+      <div class="sort-options sort-options-extended">
+        <div class="sort-category-group">
+          <button type="button" id="sort-categories" aria-pressed="false">За відділами</button>
+          <button type="button" id="sort-category-order" class="sort-category-suboption">↳ Порядок відділів</button>
+          <button type="button" id="sort-custom-category" class="sort-category-suboption">↳ Власні відділи (до 15)</button>
+        </div>
+        <button type="button" id="sort-oldest">Дата: старіші → новіші</button>
+        <button type="button" id="sort-newest">Дата: новіші → старіші</button>
+        <button type="button" id="sort-list">Списком (А–Я)</button>
+        <button type="button" id="sort-random">Хаотично</button>
+        <button type="button" id="sort-initial">Початковий порядок</button>
+      </div>
+      <div class="av-sort-actions-separator" role="separator" aria-hidden="true"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="sort-products-cancel" class="product-action-cancel">Скасувати</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="category-order-modal" class="product-modal">
+    <div class="product-modal-box category-order-box">
+      <div class="product-modal-title">Порядок відділів</div>
+      <p class="import-preview-note">Змініть порядок відділів стрілками ↑ / ↓. Зміни застосовуються після натискання «Зберегти»</p>
+      <div id="category-order-list" class="category-order-list"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="category-order-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="category-order-reset" class="product-action-cancel">Скинути</button>
+        <button type="button" id="category-order-save">Зберегти</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="custom-category-modal" class="product-modal">
+    <div class="product-modal-box custom-category-box">
+      <div class="product-modal-title">Власні відділи</div>
+      <p class="import-preview-note">Стандартні відділи залишаються доступними. Можна створити не більше 15 власних відділів.</p>
+      <div class="custom-category-create">
+        <input id="custom-category-name" type="text" maxlength="40" placeholder="Назва власного відділу" aria-label="Назва власного відділу">
+        <button type="button" id="custom-category-add">Додати</button>
+      </div>
+      <p id="av-custom-category-counter" class="av-custom-category-counter" aria-live="polite">Власних відділів: 0 / 15</p>
+      <div id="custom-category-list" class="custom-category-list"></div>
+      <div class="av-custom-category-divider" role="separator" aria-hidden="true"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="custom-category-close">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="delete-product-modal" class="product-modal">
+    <div class="product-modal-box delete-product-modal-box">
+      <div class="product-modal-title">Видалити продукт</div>
+      <div class="delete-sort-controls">
+        <button type="button" id="delete-sort-products">Сортувати</button>
+      </div>
+      <div class="delete-product-search-wrapper search-wrapper">
+        <input id="delete-product-search" type="search" autocomplete="off" enterkeyhint="search" aria-label="Пошук продукту для видалення" placeholder="Пошук продукту...">
+        <button id="delete-product-search-clear" type="button" class="av-search-clear-button" aria-label="Очистити пошук продукту" disabled><span class="av-search-clear-glyph" aria-hidden="true">✕</span></button>
+      </div>
+      <div class="delete-product-search-divider" role="separator" aria-hidden="true"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="delete-product-cancel-top" class="product-action-cancel">Скасувати</button>
+      </div>
+      <div id="delete-product-list" class="delete-product-list"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="delete-product-cancel-bottom" class="product-action-cancel">Скасувати</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="archive-text-modal" class="product-modal">
+    <div class="product-modal-box archive-text-modal-box">
+      <div class="product-modal-title">Змінити текст</div>
+      <div class="add-product-field">
+        <label for="archive-text-input">Текст денного підсумку:</label>
+        <textarea id="archive-text-input" class="archive-text-input"></textarea>
+      </div>
+      <div class="archive-comment-tools">
+        <button type="button" id="archive-text-paste">Вставити</button>
+        <button type="button" id="archive-text-clear">Очистити</button>
+        <button type="button" id="archive-text-copy">Скопіювати</button>
+      </div>
+      <div class="archive-comment-divider" aria-hidden="true"></div>
+      <div class="archive-comment-footer">
+        <button type="button" id="archive-text-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="archive-text-save">Зберегти</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="archive-comment-modal" class="product-modal">
+    <div class="product-modal-box archive-text-modal-box">
+      <div class="product-modal-title">Коментар до дня</div>
+      <div class="add-product-field">
+        <label for="archive-comment-input">Коментар:</label>
+        <textarea id="archive-comment-input" class="archive-text-input archive-comment-input"></textarea>
+        <div id="archive-comment-limit" class="archive-comment-limit" aria-live="polite"></div>
+        <fieldset class="archive-day-type-group" id="archive-day-type-group">
+          <legend>Тип дня:</legend>
+          <label><input type="checkbox" name="archive-day-type" value="rest"><span>Відпочинок</span></label>
+          <label><input type="checkbox" name="archive-day-type" value="training"><span>Тренування</span></label>
+          <label><input type="checkbox" name="archive-day-type" value="cheatmeal"><span>Чітміл</span></label>
+        </fieldset>
+      </div>
+      <div class="archive-comment-tools">
+        <button type="button" id="archive-comment-paste">Вставити</button>
+        <button type="button" id="archive-comment-clear">Очистити</button>
+        <button type="button" id="archive-comment-copy">Скопіювати</button>
+      </div>
+      <div class="archive-comment-divider" aria-hidden="true"></div>
+      <div class="archive-comment-footer">
+        <button type="button" id="archive-comment-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="archive-comment-save">Зберегти</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="calc-quick-modal" class="product-modal">
+    <div class="product-modal-box calc-quick-modal-box">
+      <div class="product-modal-title">Швидкі КБЖВ</div>
+      <p class="import-preview-note">Створіть власні кнопки для швидкого додавання значень у калькулятор. Максимум 50 швидких КБЖВ</p>
+      <div class="calc-quick-create">
+        <select id="calc-quick-metric" aria-label="Показник швидкого КБЖВ">
+          <option value="kcal">Калорії</option>
+          <option value="protein">Білки</option>
+          <option value="fat">Жири</option>
+          <option value="carb">Вуглеводи</option>
+          <option value="sugar">Цукри</option>
+          <option value="salt">Сіль</option>
+          <option value="fiber">Клітковина</option>
+        </select>
+        <input id="calc-quick-value" type="number" min="0.001" step="0.001" inputmode="decimal" placeholder="Значення">
+        <button type="button" id="calc-quick-add">Додати</button>
+      </div>
+      <div id="calc-quick-list" class="calc-quick-list"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="calc-quick-close">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="export-preview-modal" class="product-modal">
+    <div class="product-modal-box import-preview-box">
+      <div class="product-modal-title">Перевірка експорту</div>
+      <p class="import-preview-note">Перевірте дані, які будуть збережені у файл</p>
+      <div class="transfer-scope-actions" id="export-scope-actions">
+        <button type="button" id="export-scope-all" data-scope="all">Експортувати усе</button>
+        <button type="button" id="export-scope-blocks" data-scope="blocks">Експортувати КБЖВ Блоки</button>
+        <button type="button" id="export-scope-calculator" data-scope="calculator">Експортувати КБЖВ Калькулятор</button>
+        <button type="button" id="export-scope-archive" data-scope="archive">Експортувати КБЖВ Архів</button>
+        <button type="button" id="export-scope-profile" data-scope="profile">Експортувати дані профілю</button>
+      </div>
+      <div class="import-preview-data">
+        <div>КБЖВ-блоків: <strong id="export-preview-products">0</strong></div>
+        <div>Записів архіву: <strong id="export-preview-archive">0</strong></div>
+        <div>Нотатка архіву: <strong id="export-preview-archive-note">—</strong></div>
+        <div>Записів калькулятора: <strong id="export-preview-calculator">0</strong></div>
+        <div>Чернетка калькулятора: <strong id="export-preview-draft">—</strong></div>
+        <div>Денна ціль: <strong id="export-preview-goal">—</strong></div>
+        <div>Налаштування сортування КБЖВ-блоків: <strong id="export-preview-settings">—</strong></div>
+        <div>Дані профілю: <strong id="export-preview-profile">—</strong></div>
+        <div>Версія: <strong id="export-preview-version">—</strong></div>
+        <div>Дата експорту: <strong id="export-preview-date">—</strong></div>
+      </div>
+      <div class="product-modal-actions">
+        <button type="button" id="export-preview-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="export-preview-confirm">Експортувати</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="system-sync-details-modal" class="product-modal" role="dialog" aria-modal="true" aria-labelledby="system-sync-details-title">
+    <div class="product-modal-box av-sync-details-box">
+      <h2 id="system-sync-details-title" class="product-modal-title">Синхронізація та резервні копії</h2>
+      <p class="av-sync-help">Перевіряється відповідність даних цього пристрою та Cloudflare D1. Інші пристрої офлайн або їхні локальні чернетки неможливо перевірити з цього екрана.</p>
+      <div class="av-sync-details-body" aria-live="polite">
+        <h3>КБЖВ — стан кожного розділу</h3>
+        <div class="av-sync-backup-details av-sync-data-overview">
+          <div><span>КБЖВ-блоків</span><strong id="system-products-count">0</strong></div>
+          <div><span>Записів у КБЖВ-архіві</span><strong id="system-archive-count">0</strong></div>
+        </div>
+        <div class="av-sync-sections">
+          <div><span>КБЖВ-блоки</span><strong data-av-sync-group="blocks" class="av-sync-state is-unknown"><i aria-hidden="true"></i><span>Перевірка</span></strong></div>
+          <div><span>КБЖВ-калькулятор і цілі</span><strong data-av-sync-group="calculator" class="av-sync-state is-unknown"><i aria-hidden="true"></i><span>Перевірка</span></strong></div>
+          <div><span>КБЖВ-архів і нотатка</span><strong data-av-sync-group="archive" class="av-sync-state is-unknown"><i aria-hidden="true"></i><span>Перевірка</span></strong></div>
+        </div>
+        <hr class="av-sync-divider">
+        <h3>Тренування — окрема база</h3>
+        <div class="av-sync-sections">
+          <div><span>Синхронізація тренувального архіву</span><strong data-av-sync-group="training" class="av-sync-state is-unknown"><i aria-hidden="true"></i><span>Перевірка</span></strong></div>
+        </div>
+        <div class="av-sync-backup-details">
+          <div><span>Версія тренувального архіву</span><strong id="system-training-version">Очікування</strong></div>
+          <div><span>Остання зміна тренувального архіву</span><strong id="system-training-updated">Очікування</strong></div>
+          <div><span>Останнє завантаження файлів тренувань</span><strong id="system-training-imported">Немає даних</strong></div>
+          <div><span>Стан синхронізації тренувань</span><strong id="system-training-sync" class="av-sync-state is-unknown" aria-live="polite"><i aria-hidden="true"></i><span>Очікування</span></strong></div>
+        </div>
+        <hr class="av-sync-divider">
+        <h3>Налаштування та профіль</h3>
+        <div class="av-sync-sections">
+          <div><span>Профіль</span><strong data-av-sync-group="profile" class="av-sync-state is-unknown"><i aria-hidden="true"></i><span>Перевірка</span></strong></div>
+        </div>
+        <p class="av-sync-help av-sync-local-note">Локальні налаштування та незбережені чернетки цього пристрою не входять до серверної синхронізації.</p>
+        <hr class="av-sync-divider">
+        <h3>Останні операції та резервні копії КБЖВ</h3>
+        <div class="av-sync-backup-details">
+          <div><span>Останнє оновлення бази КБЖВ</span><strong id="system-database-updated">Ще не оновлювалася</strong></div>
+          <div><span>Остання успішна синхронізація КБЖВ</span><strong id="system-backup-sync">Ще не виконувалася</strong></div>
+          <div><span>Експорт JSON КБЖВ</span><strong id="system-export">Ще не виконувався</strong></div>
+          <div><span>Імпорт JSON КБЖВ</span><strong id="system-import">Ще не виконувався</strong></div>
+        </div>
+        <p id="system-sync-details-checked" class="av-sync-checked">Сервер ще не перевірений</p>
+      </div>
+      <div class="product-modal-actions av-sync-modal-actions"><button type="button" id="system-sync-details-close">Зрозуміло</button></div>
+    </div>
+  </div>
+
+  <!-- v173: Єдиний довідник для всіх вкладок. -->
+  <div id="system-help-modal" class="product-modal" role="dialog" aria-modal="true" aria-labelledby="system-help-title">
+    <div class="product-modal-box system-help-box instruction-guide-box">
+      <h2 id="system-help-title" class="product-modal-title">Інструкції</h2>
+      <button id="instruction-picker-open" type="button" aria-haspopup="dialog" aria-controls="instruction-picker-modal">Знайти потрібну інструкцію</button>
+      <div id="instruction-guide-scroll" class="system-help-content instruction-guide-content" tabindex="0" aria-label="Довідник Avicularia">
+<section id="instruction-topic-start" class="instruction-topic" tabindex="-1" aria-label="Початок роботи та навігація"><h3>Початок роботи та навігація</h3><div class="instruction-topic-body"><div class="instruction-subsection"><h4>Вхід і реєстрація</h4><p>Створіть акаунт через форму реєстрації або увійдіть за логіном і паролем. Дані зберігаються для конкретного користувача; не передавайте пароль іншим. Без активного сеансу доступ до персональних даних обмежений</p></div><div class="instruction-subsection"><h4>Сторінки і вкладки</h4><p>Натискання назви Avicularia відкриває окрему сторінку «Чому саме Avicularia?», де окремо показано AI-ілюстрацію павука і фотографію реального павука, а підкреслення назви відповідає підкресленню імені адміністратора. На першій сторінці навігації відкриваються Профіль, КБЖВ Блоки, Калькулятор, Архів і Консоль; на другій — Зручності, Тренування та додаткова Консоль. Стрілка перемикає сторінки навігації, а не ваші збережені записи. Сайт пам’ятає останню відкриту вкладку цього акаунта на пристрої та після нового входу повертає до неї; виняток — кнопка «Оновити сайт» в обох представленнях Консолі: після перевірки оновлень і перезавантаження вона відкриває головну вкладку «КБЖВ Блоки». Обидві Консолі використовують ту саму сторінку, дані та журнал подій. Пошуки у КБЖВ Блоках та Архіві також відновлюються локально</p></div><div class="instruction-subsection"><h4>Кнопки і підтвердження</h4><p>Кнопки очищення пошуку розташовані всередині правої частини поля з невеликим відступом від країв і заокруглені з усіх боків. За порожнього поля кнопки зовсім не видно, навіть під час фокусування; після введення хоча б одного символу вона з’являється у червоному кольорі, як кнопка видалення фото в запланованих продуктах. Натискання очищає запит: кнопка без зміщення на 420 мс стає яскраво-червоною з таким самим світінням, як при видаленні фото, після чого зникає. Стан пошуку перевіряється також після повторного відкриття сторінки. В архіві поле пошуку має таку саму висоту, як у КБЖВ-блоках. Верхній відступ і висота сторінки залишаються за правилами v268. Шрифт кнопок єдиний для всього сайту. Звичайні картки, внутрішні блоки, поля введення й діалогові вікна не мають постійних контурних рамок; коли текстове, числове, календарне поле чи пошук активне, навколо нього з’являється м’яке розсіяне бірюзове світіння; у профілі воно не обрізається краями поля; для коментарів тренувань підсвітка така сама, як для нотатки архіву. Кнопки використовують той самий шрифт і жирність, що й назва сайту та ім’я користувача. У списку користувачів синій обідок лишається лише для аватарів без фотографії. У формах додавання й редагування продукту, у полі ваги, «Швидких вагах», нотатках архіву та решті полів введення використовується такий самий плавний ефект світіння, як у полі «Пошук продукту»: без додаткової рамки під час фокусу; підсвітка виникає лише після активації поля. Іконки сайту використовуються у браузері та встановленій вебпрограмі. Зображення PWA-іконки кадроване щільніше для усунення світлого зовнішнього краю; iOS може оновлювати іконку на головному екрані із затримкою, кеш і дані сайту очищати не потрібно. На екрані входу зображення візуально кадроване, щоб приховати темний зовнішній край; з 2026 року іконки PWA оновлюються разом із файлами релізу. Верхній відступ і висоту сайту збережено такими, як у v268, без додаткових коригувань у цьому релізі. У пошуку КБЖВ-блоків, архіву та видалення продуктів усередині правого краю поля є компактна кнопка ✕ з чотирма заокругленими кутами й внутрішнім відступом: без тексту її зовсім не видно, після введення вона з’являється червоною, а під час очищення на 420 мс отримує яскраво-червоне світіння, як кнопка видалення фотографії запланованого продукту. Кнопка не виступає за межі активного поля. Компонування висоти сторінки залишається ідентичним v268; наведені правила відображення поля не змінюють його вертикальних відступів. Кнопки швидкої прокрутки використовують плавне прискорення та гальмування, а колір під час натискання змінюється плавно. Окрему постійну рамку збережено для повідомлення «Лише головний адміністратор» в адміністративній панелі. Натиснення має коротку візуальну реакцію: зелений статус означає успішну дію, червоний — скасування чи відсутність змін, а звичайні кнопки показують короткий стан натискання. Повідомлення дії відображається до завершення анімації. Для небезпечних операцій з’являється підтвердження. Дочекайтеся повідомлення про завершення перед повторним натисканням</p></div><div class="instruction-subsection"><h4>Перевірка після оновлення v277</h4><p>Після встановлення перевірте у «Консоль → Стан системи» номер сайту v277 і сумісний Worker v110. Перегляньте профіль, КБЖВ Блоки, калькулятор, архів, «Зручності» та тренування. Перевірте пошуки й червоні кнопки ✕: вони відсутні за порожнього поля, з’являються після введення та прибирають текст після червоної анімації. Звірте збереження продукту і розрахунок КБЖВ для відомої ваги; для швидких КБЖВ діє обмеження 50 значень. Перед перевіркою імпорту створіть повний JSON-експорт і окремий ZIP тренувань; випробовувати заміну даних краще у TESTING із тестовими записами. У «Стані системи» команда «Перевірити синхронізацію» лише порівнює локальну та серверну копії й не перезаписує дані; за розбіжності спочатку збережіть резервні копії. Якщо виникла помилка, не очищуйте IndexedDB, Safari та D1. Статична перевірка файлів не замінює перевірку авторизованого акаунта і реальної Cloudflare D1.</p></div><div class="instruction-subsection"><h4>Швидка прокрутка</h4><p>Дві вузькі смужки переміщують до початку та кінця поточної сторінки або довгого діалогового вікна. У «Консоль → Стан системи» можна увімкнути чи вимкнути смужки, а кнопкою «Показати налаштування» відкрити позицію, висоту, горизонтальне зміщення 0–100% і фізичний розмір. «Показано» підсвічується зеленим, «Сховано» — червоним. Висоту та ширину можна задавати з точністю до 0,1% (наприклад 2,5%). Значення 0% за шириною означає дотик видимої смужки до вибраного краю. Початкове горизонтальне зміщення для нового профілю — 2,5%. Кнопки керування й чотири кнопки налаштувань у консолі мають компактну однакову висоту, як «Інструкції» та «Оновити». Кнопки «Змінити» та «Закрити» в кожному редакторі однакового розміру; у редакторі фізичного розміру «Задати за замовчуванням» також має їхню висоту та ширину. У вікні розміру кнопка «Задати за замовчуванням» повертає 7 × 31 px. Вікна «Змінити висоту», «Змінити ширину» та «Змінити розмір» можна закрити натисканням поза вікном: на відповідній кнопці з’явиться червоне повідомлення, що значення не змінено. Смужки динамічно слідують за видимою областю екрана. Коли відкривається чи закривається клавіатура iPhone (наприклад, під час пошуку), вони швидко й плавно пересуваються відповідно до вибраних відсотків висоти та ширини. Після закриття клавіатури повертаються на налаштоване місце. Значення налаштувань та заданий розмір у пікселях не змінюються. Зміни видимої області або орієнтації пристрою не перезаписують налаштувань. У повноекранній статистиці й компактних діалогах, зокрема «Сортувати продукти», смужки приховані. У великих прокручуваних діалогах та вікні «Видалити продукт» вони залишаються видимими. У верхній точці сторінки кнопка «Вгору» не працює, а «Вниз» доступна. У нижній точці «Вниз» не працює, а «Вгору» доступна. Посередині обидві кнопки працюють. Після переходу вниз кнопка «Вниз» залишається вимкненою навіть тоді, коли новий запис у консолі, завантаження вмісту або зміна висоти екрана зсуває нижню межу. Вона знову працює лише після справжньої прокрутки вгору або переходу на початок сторінки. У довгих діалогах застосовується та сама логіка. Безрезультатні натискання не запускають анімацію та не створюють записів у консолі; успішний перехід записується один раз. Оформлення й швидкість анімації не змінені. Рух пришвидшений зі збереженням плавного прискорення та гальмування. П’ять параметрів швидкої прокрутки зберігаються локально для акаунта на цьому пристрої, можуть входити до JSON-копії профілю, але не синхронізуються автоматично між пристроями через D1.</p><p>У вікні фотографування запланованого продукту кнопки − і + змінюють масштаб у межах підтримуваних камерою або програмою значень. Камера залишається всередині Avicularia; можливість фізичного перемикання об’єктивів залежить від iOS.</p></div><div class="instruction-subsection"><h4>Особливості мобільної версії</h4><p>На телефоні частина кнопок переноситься в інший рядок, а довгі вікна прокручуються всередині. Верхня межа сторінки обмежена: перетягування за верхній край більше не повинно відкривати порожню ділянку над сайтом. Звичайне гортання та прокрутка довгих діалогів залишаються доступними. Поля входу підтримують стандартні позначки для автозаповнення логіна й пароля. У вебпрограмі з головного екрана iPhone пропозиції збережених паролів залежать також від версії iOS і налаштувань автозаповнення та можуть відрізнятися від Safari. Якщо зміни не видно після публікації нової версії, використайте «Оновити сайт» і перевірте номер релізу в консолі. Установлена PWA на iPhone іноді зберігає попередню іконку: у такому разі видаліть тільки ярлик із головного екрана та встановіть його заново, не очищаючи дані Safari</p></div><div class="instruction-subsection"><h4>Адміністрування та очищення історії</h4><p>Журнал дій користувачів і події входів зберігаються до 24 годин; список завершених або протермінованих сеансів — до 24 годин після завершення чи завершення строку дії. Серверна очистка виконується під час API-звернень (не частіше ніж приблизно раз на 5 хвилин) або за наявності налаштованого Cloudflare Cron Trigger; це не очищення ваших продуктів і тренувань. Чинні сеанси та поточні синхронізовані дані користувача автоматично не видаляються. Запити на відновлення доступу зберігаються 7 днів від створення (Worker v110). «Повна інформація користувача» включає поточний знімок даних: очищати його як короткостроковий журнал небезпечно. Worker v110 виправляє очищення таблиць поштучної синхронізації КБЖВ при підтвердженому видаленні акаунта власником або самим користувачем. Звичайна чистка журналу не торкається цих даних.</p></div></div></section><section id="instruction-topic-profile" class="instruction-topic" tabindex="-1" aria-label="Профіль"><h3>Профіль</h3><div class="instruction-topic-body"><div class="instruction-subsection"><h4>Перегляд</h4><p>Відкрийте «Профіль», щоб переглянути збережені особисті поля, фотографію й показники. Ці особисті дані не змінюють технічні налаштування сайту, розрахунки КБЖВ чи план тренувань. Деякі службові поля є лише для читання</p></div><div class="instruction-subsection"><h4>Редагування</h4><p>У доступні поля внесіть потрібні значення, після чого натисніть «Зберегти профіль». Якщо залишити вікно або сторінку з незбереженими змінами, сайт може попросити підтвердження</p></div><div class="instruction-subsection"><h4>Фото</h4><p>«Змінити фото» дозволяє вибрати нове зображення; «Видалити фото» видаляє поточне після підтвердження. Аватар без фотографії має бірюзову рамку й ініціали, з фотографією рамка зникає, а знімок займає всю круглу область. Аватар у списку користувачів адміністрації береться з даних профілю, якщо його збережено</p></div><div class="instruction-subsection"><h4>Резервна копія</h4><p>Імпорт та експорт профілю здійснюються через «Експорт бази» й «Імпорт бази» у вкладці КБЖВ Блоки. До розділу профілю також входять налаштування видимості, сторони, висоти, горизонтального зміщення й розміру швидкої прокрутки</p></div><div class="instruction-subsection"><h4>Безпека</h4><p>Кнопки «Вийти», «Очистити сайт» та «Видалити акаунт» розташовані в консолі. Це різні дії: вихід завершує сеанс, очищення видаляє дані згідно з попередженням, а видалення акаунта — критична операція</p></div></div></section><section id="instruction-topic-blocks" class="instruction-topic" tabindex="-1" aria-label="КБЖВ Блоки"><h3>КБЖВ Блоки</h3><div class="instruction-topic-body"><div class="instruction-subsection"><h4>Заплановані продукти та фотографії</h4><p>У «КБЖВ Блоки» натисніть «Додати продукт». Виберіть «Швидко» для імпорту AVP2, «Вручну» для введення даних самостійно або «Запланувати» для фотографій продукту. Три способи відходять від вертикальної лінії, а «Скасувати» розміщено під ними на її прямому продовженні. Праворуч показано один із наявних мемів (максимум 33): зображення автоматично змінюється кожні дві години. Квадратна бірюзова кнопка з білими стрілками праворуч показує наступний мем відразу; після останнього наявного зображення цикл починається знову. Під час ручного перемикання кнопка коротко світиться зеленим. Розмір фотографії не змінюється під час коротких повідомлень на кнопках вибору. Передбачено 33 слоти `photo-01.webp` – `photo-33.webp` у `assets/memes/`. Коли справжнього мему немає, у слоті використовується оновлена чорна фотографія-заглушка. Заглушки автоматично розпізнаються та ніколи не показуються під час перемикання: видно тільки справжні меми. У початковому комплекті 13 справжніх мемів і 20 заглушок, які можна замінювати новими фото. Щоб додати мем, замініть відповідний `photo-XX.webp` своїм WebP під тією ж назвою; після оновлення сторінки він автоматично потрапить до циклу. Не перейменовуйте файли і не змінюйте `slot-empty.webp` — зразок незаповненого слота. Меми є стисненими файлами самого сайту і не записуються до КБЖВ Блоків, IndexedDB, localStorage чи Cloudflare D1 (браузер може тимчасово кешувати завантажені файли). «Скасувати» або натискання поза вікном закривають вибір без додавання продукту. Режим планування й перехід між ним і ручним додаванням не змінені. Вбудована камера продукту підтримує зближення й віддалення кнопками −/+; де доступно, використовується zoom камери, інакше програмне збільшення. Фізичний вибір об’єктива на iPhone частково контролює iOS.</p></div><div class="instruction-subsection"><h4>Ручне додавання або планування</h4><p>«Додати продукт» відкриває три способи: «Швидко», «Вручну» та «Запланувати». «Вручну» відкриває звичайну форму КБЖВ без фотографій, «Швидко» — поле для AVP2 із попереднім заповненням форми, а «Запланувати» — роботу з фотографіями. У режимі планування є два постійно видимі слоти камери: «1. Головне фото продукту» та «2. Харчова цінність», без поля назви та ручного заповнення показників. Кнопка «Перейти до запланованих →» або «← Перейти до додавання продукту» перемикає ці два режими та має компактну висоту. Звичайний продукт зберігається лише після натискання «Зберегти».</p></div><div class="instruction-subsection"><h4>Швидке додавання AVP2</h4><p>У «КБЖВ Блоки» натисніть «Додати продукт» → «Швидко». У полі попереднього перегляду спочатку показано «Дані ще не введені», воно підсвічується під час активації, але не редагується без кнопки «Редагувати». Перший ряд кнопок: «Редагувати» (під час редагування — «Зберегти дані»), «Вставити», «Скопіювати». Другий ряд: «Очистити» і «Провести та додати». «Вставити» завжди активна на вигляд і натискається: до початку редагування повідомляє «Спочатку редагуйте», під час редагування вставляє текст із буфера. При відкритті клавіатури на телефоні вікно підлаштовується під видиму частину екрана, а дії залишаються доступними через прокрутку. Під роздільною лінією розташована кнопка «Скасувати» на всю ширину вікна. «Провести та додати» перевіряє рядок, переводить показники на 100 г та відкриває вже заповнену форму для перегляду; нічого не записує в базу без натискання «Зберегти» у формі.</p></div><div class="instruction-subsection"><h4>Шаблон і правила AVP2</h4><p>Вводьте один рядок за шаблоном @AVP2|Н=#|Г=#|К=#|Б=#|Ж=#|В=#|Ц=#|С=#|КЛ=#|Р=#|ШВ=#;#;#;#|О=#. Замініть # значеннями: Н — назва; Г — грамовка; К — ккал; Б — білки; Ж — жири; В — вуглеводи; Ц — цукри; С — сіль; КЛ — клітковина; Р — відділ продукту; ШВ — до чотирьох швидких ваг; О — опис. Числа пишіть без одиниць, десяткова частина може бути через кому. Невідомі показники позначайте НД, відсутні швидкі ваги — ШВ=-, відсутній опис — О=НД. Харчові показники перераховуються з Г на 100 г, швидкі ваги — ні. Для назви та опису використовуйте \| замість вертикальної риски й \\ замість зворотної косої риски. Для значень із суперечностями сайт запитує підтвердження перед заповненням форми; автоматично показники не виправляє.</p></div><div class="instruction-subsection"><h4>Перегляд фотографій</h4><p>У плановому записі натисніть на одне з двох збережених фото: воно відкриється на весь екран із масштабуванням і переміщенням. Фото має заокруглені кути й розташоване окремо від сірого блоку із назвою, кнопками масштабування й переходу та «Закрити»; роздільної лінії немає, позаду видно суцільний темний фон сайту без розмиття. Кнопка «Додати продукт» у вікні перегляду переходить до форми ручного КБЖВ. Із цієї форми можна повертатися до фотографій без втрати введеної чернетки. Після успішного збереження готового продукту вибраний план та його тимчасові фото прибираються з поточної бази; раніше зроблені експорти не змінюються.</p></div><div class="instruction-subsection"><h4>Пошук та перегляд</h4><p>Введіть назву продукту в полі пошуку; список покаже відповідні блоки. Праворуч усередині поля є компактна кнопка очищення ✕ із заокругленими всіма чотирма кутами. Вона має невеликий відступ від меж поля, не перекриває його активну підсвітку та не зміщується при натисканні. Те саме оформлення використовують пошуки Архіву й «Видалити продукт». Натисніть на блок, щоб переглянути деталі КБЖВ. Копіювання дозволяє ввести вагу або використати швидкі ваги; на iPhone вікно піднімається над числовою клавіатурою, щоб не перекривати кнопки. Три кнопки «Скасувати», «Скопіювати» і «До калькулятора» залишаються в одному рядку.</p></div><div class="instruction-subsection"><h4>Додати продукт</h4><p>Натисніть «Додати продукт» й оберіть «Швидко», «Вручну» або «Запланувати». «Швидко» розбирає текст AVP2 і підставляє перевірені поля у звичайну форму, але не зберігає продукт автоматично. «Вручну» дозволяє самостійно ввести назву, відділ і показники КБЖВ. У режимі «Запланувати» назва плану присвоюється автоматично, а фотографії знімаються камерою в двох слотах; кожний план має власний ID. Зліва у виборі способу додавання є вертикальна схема кнопок; справа — мем, який змінюється раз на дві години або вручну квадратною кнопкою зі стрілками; після останнього мему починається нове коло. Меми беруться з файлів сайту й не зберігаються серед даних користувача. У звичайній формі збереження потрібно підтвердити кнопкою «Зберегти».</p></div><div class="instruction-subsection"><h4>Редагування й видалення</h4><p>У картці продукту доступні редагування й копіювання. У «Видалити продукт» зверху залишено «Сортувати», нижче — пошук за назвою чи повним описом. У звичайному стані поле не має контурної рамки, а при натисканні підсвічується тим самим м’яким бірюзовим світінням, що й інші поля сайту. Пошук фільтрує лише видимий список і не змінює даних. Від роздільної лінії до поля пошуку і до верхньої кнопки «Скасувати» витримано однаковий відступ 9 px; друга кнопка «Скасувати» — під списком. Щоб видалити запис, знайдіть його, натисніть «Видалити» й підтвердьте дію. Якщо збігів немає, список показує повідомлення. Пошук можна очистити хрестиком. Після видалення решта записів залишаються без змін</p></div><div class="instruction-subsection"><h4>Сортування та розташування</h4><p>«Сортувати» дозволяє впорядкувати продукти за відділами, датою, назвою, хаотично або повернути початковий порядок. Роздільник перед «Скасувати» має однаковий відступ 8 px зверху й знизу. У режимі «За відділами» доступні стандартні відділи та до 15 власних, окремо можна змінити їхній порядок. «Змінити розташування» дозволяє змінити порядок блоків вручну й зберегти його. Шість основних кнопок («Експорт бази», «Імпорт бази», «Додати продукт», «Видалити продукт», «Змінити розташування», «Сортувати») мають однакову ширину та компактну висоту 28 px. Їхній шрифт однакової гарнітури й жирності, розміром 11,5 px. Кнопки «Скасувати», «Скинути», «Зберегти» у «Змінити розташування» повторюють початковий стиль кнопок «Порядок відділів»: однакові відступи, ширина, шрифт і висота. Сортування та власні відділи входять до експорту КБЖВ Блоків.</p></div><div class="instruction-subsection"><h4>Експорт і імпорт</h4><p>«Експорт бази» відкриває п’ять варіантів експорту: повна копія або окремо КБЖВ Блоки, Калькулятор, Архів чи Профіль. Тренування експортуються окремим ZIP. «Імпорт бази» спочатку показує попередній перегляд вмісту й дозволяє заміну або додавання тільки нових даних. Повний опис є в інструкції «Резервні копії»</p></div><div class="instruction-subsection"><h4>Галерея продукту</h4><p>Тимчасові фотографії додаються під час створення плану: 1. Головне фото продукту; 2. Харчова цінність. Слоти показано одразу, без галочок та поля назви. До запуску камери у двох слотах показано білий напис «Натисніть, щоб увімкнути камеру». Після фотографування кнопка смітничка коротко підсвічується яскраво-червоним при підтвердженому видаленні. Перед збереженням можна перезняти кадр. Після збереження плану зміна його фотографій не підтримується: натисніть «Видалити» поряд із мініатюрами та створіть новий план. Усі планові фото зберігаються в JSON-експорті КБЖВ та синхронізуються разом із даними. Видалення фото з активної бази не видаляє старі експорти і резервні копії.</p></div><div class="instruction-subsection"><h4>Сортування за відділами</h4><p>Відкрийте «КБЖВ Блоки → Сортувати → За відділами», щоб увімкнути чи вимкнути групування. Усі стандартні відділи незмінні та не входять до ліміту. Через «Власні відділи» можна додати до 15 своїх назв (до 40 символів кожна), редагувати порядок у «Порядок відділів». Нові продукти в режимі відділів потребують вибору відділу; старі продукти без зазначеного відділу визначаються за назвою або потрапляють до «Інше» без зміни їхніх збережених даних. Повний експорт або експорт КБЖВ Блоків включає власні відділи, порядок, перемикач сортування та самі продукти. Під час імпорту більше 15 власних відділів відхиляються без зміни даних. Перед імпортом завжди збережіть резервний JSON.</p></div></div></section><section id="instruction-topic-calculator" class="instruction-topic" tabindex="-1" aria-label="Калькулятор"><h3>Калькулятор</h3><div class="instruction-topic-body"><div class="instruction-subsection"><h4>Додавання</h4><p>Вставте або введіть текст КБЖВ у головне поле й натисніть «Додати». Збережені блоки можна використовувати як джерело показників. Перевірте розібрані показники перед внесенням у денний підсумок У КБЖВ-калькуляторі кнопка «Вставити» стоїть після «Очистити блоки», перед «Розділ», має той самий розмір і стиль, що й «Додати», читає буфер обміну, додає текст до чернетки й не зберігає продукт без натискання «Додати».</p></div><div class="instruction-subsection"><h4>Керування вмістом</h4><p>«Очистити текст» прибирає вміст поля введення, «Очистити блоки» — додані записи калькулятора; це різні дії. Доступні швидкі КБЖВ, розділи та переміщення записів історії. Швидких КБЖВ можна створити не більше 50 на користувача; коли ліміт досягнуто, нове значення не додається. Можна видаляти наявні швидкі КБЖВ. Імпорт резервної копії також перевіряє ліміт 50 перед внесенням змін і не обрізає список автоматично</p></div><div class="instruction-subsection"><h4>Денна ціль</h4><p>У блоці «Денна ціль КБЖВ» натисніть «Показати налаштування», введіть планові показники та «Зберегти цілі». Окремий перемикач вмикає або вимикає відображення залишку від цілі</p></div><div class="instruction-subsection"><h4>Результати й копіювання</h4><p>«Скопіювати підсумок» переносить поточні підсумкові дані. «Скопіювати залишок» працює з розрахунком від увімкненої денної цілі. Порожній результат не повинен копіювати випадкові значення</p></div><div class="instruction-subsection"><h4>Збереження в архів</h4><p>Натисніть «Зберегти в архів» і виберіть дату. Якщо запис за цю дату вже існує, збереження блокується, щоб не перезаписати день. Після успішного запису окремо підтвердьте, чи очищувати калькулятор</p></div><div class="instruction-subsection"><h4>Копіювання та швидка вага</h4><p>У КБЖВ Блоках під час копіювання продукту можна один раз торкнутися збереженої швидкої ваги, навіть якщо активна числова клавіатура iPhone: вага підставляється відразу, поле введення залишається активним. Кнопка «До калькулятора» поміщає запис у поле введення калькулятора; щоб він увійшов до денного підсумку, натисніть «Додати» у вкладці «Калькулятор». Формат «число + показник» і формат «показник: число» розпізнаються для семи полів КБЖВ. Невпізнаний текст не додає поживних значень; перевіряйте історію калькулятора перед збереженням дня в архів.</p></div></div></section><section id="instruction-topic-archive" class="instruction-topic" tabindex="-1" aria-label="КБЖВ Архів"><h3>КБЖВ Архів</h3><div class="instruction-topic-body"><div class="instruction-subsection"><h4>Записи</h4><p>Архів містить щоденні підсумки та позначення пропущених днів. Записи можна переглядати, шукати, редагувати або видаляти через доступні дії. Кнопка «Переглянути склад» відкриває список складників денного підсумку з компактним відступом до кнопки «Зрозуміло». Дати записів важливі для статистики. У вікні «Змінити текст» так само, як у «Коментар до дня», три кнопки «Вставити», «Очистити» й «Скопіювати» займають верхній ряд; нижче — роздільна лінія і кнопки «Скасувати» зліва та «Зберегти» справа, кожна на половину ширини. Відстань від поля до кнопок компактна. На відміну від коментаря до дня, «Змінити текст» не містить вибору типу дня. Вставлення й очищення редагують лише чернетку до натискання «Зберегти». Зміни записуються лише після «Зберегти».</p></div><div class="instruction-subsection"><h4>Пошук та фільтри</h4><p>Пошук охоплює підтримувані поля запису, наприклад дату, текст і коментар. Категорії або типи дня беруться з даних запису; якщо записів немає, результати пошуку порожні</p></div><div class="instruction-subsection"><h4>Графік і повний екран</h4><p>Перемикайте показники «Калорії», «Білки», «Жири», «Вуглеводи», «Цукри», «Сіль», «Клітковина». Після «Клітковина» розташовано перемикач «Ціль» для показу чи приховування цільової лінії, його дія не змінилася. Поля дат «Від» і «До» розташовані над графіком із компактним відступом, щоб зручно вибирати період. Кнопка ⛶ відкриває повноекранний графік; в цьому режимі смужки швидкої прокрутки приховані</p></div><div class="instruction-subsection"><h4>Статистика та поточні дані</h4><p>У статистиці доступні підсумки за обраними періодами, ціль на графіку й відображення поточних даних сайту. Кнопка показу/приховування поточних даних змінює лише вигляд розділу</p></div><div class="instruction-subsection"><h4>Нотатка</h4><p>«Показати нотатку» відкриває загальну нотатку архіву. Для неї є «Редагувати», «Вставити», «Очистити» та «Скопіювати». Вставлення доступне в режимі редагування; ліміт нотатки — 500 символів. Під час експорту архіву нотатка включається в файл резервної копії</p></div><div class="instruction-subsection"><h4>Історія</h4><p>У нижньому блоці доступна історія дій над записами, пошук і перегляд деталей. Поле «Пошук в архіві» оформлене як окремий суцільний блок, аналогічно полю нотатки, без обведення. Перед видаленням перевіряйте дату та тип запису; резервна копія допомагає відновити дані після випадкових змін</p></div></div></section><section id="instruction-topic-console" class="instruction-topic" tabindex="-1" aria-label="Консоль"><h3>Консоль</h3><div class="instruction-topic-body"><section><h3>Версія сайту</h3><p>Номер поточної встановленої версії інтерфейсу; звіряйте його з release.json. Зелена крапка означає, що він збігається з версією, зазначеною в опублікованому <code>release.json</code>. Червона — там зазначено новішу. Сіра — не вдалося перевірити. Це не перевірка всього коду на помилки</p><section><h3>Стан синхронізації всього сайту</h3><p>У «Стан системи» є загальний індикатор «Синхронізація всього сайту» та кнопка «Переглянути детально». Зелений колір можливий лише після підтвердженої відповідності серверу всіх чотирьох розділів КБЖВ та окремого тренувального архіву. Червоний означає розбіжність чи незавантажені локальні зміни; сірий — немає підтвердження, і це не рівнозначно успіху. Деталі містять кількість КБЖВ-блоків, кількість записів архіву, останній стан КБЖВ, окремі індикатори блоків та відділів, калькулятора й цілей, архіву та нотатки, профілю, а під лінією — тренувань. Далі показані дати останнього експорту, імпорту, синхронізації КБЖВ, оновлення бази і змін тренувального архіву. Для тренувальних архівів із записаною датою останнього імпорту також показується час їхнього завантаження. «Зрозуміло» закриває вікно; сам перегляд дані не змінює. «Порівняння копій» і кнопки вибору локальної або серверної версії залишилися в консолі.</p><p>Значення перевіряють поточний пристрій проти Cloudflare D1; не показують незбережені зміни на вимкненому ноутбуці чи телефоні. Локальні чернетки, налаштування швидкої прокрутки й «Зручності» не передаються до D1. Дані генератора паролів ніколи не зберігаються. Наявність зв’язку з мережею сама собою не означає синхронізацію.</p></section></section><section><h3>Кнопки швидкої прокрутки</h3><p>У розділі «Стан системи» можна ввімкнути або вимкнути дві вузькі напівпрозорі смужки. Лише коли смужки ввімкнені, відображається пункт «Позиція — Ліворуч/Праворуч» та кнопка «Змінити позицію». За замовчуванням вони ввімкнені й розташовані ліворуч. Якщо вони ввімкнені, верхня переносить до початку, нижня — до кінця поточної прокручуваної сторінки або довгого вікна. Перехід швидкий, але плавний. У коротких вікнах смужки приховані. Вимкнення повністю приховує їх і блокує натискання. Видимість, сторона та висота запам’ятовуються окремо для акаунта на цьому пристрої й включаються до експорту та імпорту профілю. Висоту можна змінювати в межах 0–100% через окреме вікно. Ці налаштування не змінюють дані КБЖВ, D1 та тренувань</p></section><section><h3>Зберігання журналів</h3><p>Консоль на обох сторінках і журнал дій адміністратора зберігають записи тільки за останні 24 години від фактичного часу події, без скидання опівночі. Історія входів, виходів та відвідувань також доступна не довше 24 годин. Запити на відновлення пароля видаляються через 72 години з моменту створення. Сервер очищає прострочені журнали під час обслуговування запитів і щогодинного Cron Trigger, якщо його увімкнено; локальна консоль очищається під час використання сайту. Активні сеанси не підпадають під очищення журналу: вони залишаються до завершення/закінчення терміну дії, після чого діє окреме 24-годинне правило. Очищення журналів не зачіпає архів калорійності, профіль, блоки продуктів або план тренувань</p></section><section><h3>Сеанси входу</h3><p>У «Стані системи» показані входи до вашого акаунта з типом пристрою, часом входу, останньою активністю та станом. Зелений індикатор — поточний або нещодавно активний сеанс; червоний — давно неактивний чи завершений. Тип пристрою визначається приблизно: якщо браузер його не повідомляє, використовується «Невизначений девайс». Біля іншого чинного сеансу можна натиснути «Вийти» й підтвердити завершення тільки цього входу. Поточний вхід завершується стандартною кнопкою виходу. Завершений чи прострочений сеанс відображається не довше 24 годин після завершення/закінчення терміну дії, після чого прибирається зі списку; очищення бази відбувається під час подальшого звернення до списку. «Оновити» також оновлює сеанси. Ця інформація не гарантує визначення конкретної моделі пристрою</p></section><section><h3>Мережа</h3><p>«Онлайн» означає, що пристрій повідомляє про підключення до мережі, але не гарантує доступності сервера. «Офлайн» — з'єднання недоступне за оцінкою браузера. Зелена крапка означає «Онлайн», червона — «Офлайн»</p></section><section><h3>Сервер</h3><p>Відповідь Cloudflare Worker за адресою <code>/health</code>, його номер версії та порівняння з <code>release.json</code>. Зелена/червона крапка показує відповідність опублікованій версії, а не стан усіх даних D1. У тестовому середовищі використовується окремий Worker і база D1</p></section><section><h3>Локальне сховище</h3><p>Основні великі записи зберігаються в IndexedDB, невеликі службові дані — у localStorage. Доступна квота залежить від Safari та місця на пристрої; це не гарантований «безліміт». У консолі показані приблизні значення. Якщо з'явилася помилка запису або бракує місця: негайно зробіть повний експорт JSON, перевірте його файл, звільніть місце на пристрої. Не очищуйте дані Safari до створення перевіреної резервної копії. Експорт сам по собі не зменшує заповнення сховища</p></section><section><h3>Скасування дій</h3><p>Число на кшталт 1/3 — кількість доступних знімків для повернення з максимуму трьох. «Повернути дію» спочатку показує, яку саме операцію можна скасувати, і запитує підтвердження. Не всі операції підтримують скасування</p></section><section><h3>Лічильники КБЖВ</h3><p>У «Синхронізація всього сайту → Переглянути детально» є «КБЖВ-блоків» — кількість продуктів поточного акаунта, «Записів у КБЖВ-архіві» — кількість архівних записів, включно з позначками пропущених днів, та останній стан КБЖВ. Значення автоматично оновлюються після змін даних</p></section><section><h3>Статистика сховища за розділами</h3><p>У консолі наведено оцінку розміру JSON-даних саме вашого акаунта: КБЖВ-блоки, калькулятор, архів (разом із нотаткою), профіль (разом із фото) та інші налаштування. Фактична квота IndexedDB/браузера може відрізнятися; це не п’ять окремих лімітів</p></section><section><h3>Синхронізація</h3><p>Стан обміну даними між цим пристроєм і Cloudflare D1. «Синхронізовано» означає успішну останню операцію; «Є локальні зміни» — вони ще можуть не бути на сервері; «Потрібно вибрати версію» — виявлено конфлікт копій. Синхронізація має окреме обмеження: обмеження розміру переданих даних, яке визначає чинна серверна версія</p></section><section><h3>Останнє оновлення бази КБЖВ</h3><p>Дата, коли востаннє змінювалися збережені дані бази КБЖВ на цьому пристрої. Вона не обов'язково збігається з часом синхронізації</p></section><section><h3>Порівняння копій</h3><p>Показує локальну та серверну <strong>ревізії (r1, r2…)</strong>, час змін і наявність незбережених локальних змін. Більша серверна ревізія може означати новішу копію на сервері, але час на різних пристроях може відрізнятися. Якщо є локальні зміни або конфлікт, не вибирайте джерело навмання: спочатку зробіть повний експорт JSON, потім перевірте зміст даних. Це не поелементне порівняння продуктів чи записів архіву</p></section><section><h3>Резервні копії</h3><p>«Експорт», «Імпорт» і «Синхронізація» показують дату останніх відповідних операцій. Час останньої синхронізації тут наведено лише один раз у стані системи. Для надійного резервування завантажуйте JSON у «Файли» або хмарне сховище та періодично перевіряйте можливість відновлення. Серверна синхронізація не замінює незалежної резервної копії</p></section><section><h3>Кнопки та оновлення</h3><p>«Оновити» повторно перевіряє доступні показники та відповідь Worker; дані користувача при цьому не видаляються. «Синхронізувати зараз» запускає обмін із сервером. Під час конфлікту «Взяти дані із сервера» може замінити локальні зміни, а «Зберегти дані цього пристрою» — перезаписати серверну копію. Перед вибором перевірте обидві копії та експортуйте резервний JSON. «Оновити сайт» перезавантажує сторінку, а не гарантує появи нового релізу, якщо кеш ще не оновився</p></section></div></section><section id="instruction-topic-admin" class="instruction-topic" tabindex="-1" aria-label="Адміністрація"><h3>Адміністрація</h3><div class="instruction-topic-body"><section><h3>Призначення адміністрації</h3><p>Перегляд користувачів, ролей, останніх входів, запитів на відновлення доступу та історії активності. Доступні дії залежать від ролі: адміністратора або головного адміністратора</p></section><section><h3>Користувачі</h3><p>Відкриває список зареєстрованих користувачів з ім’ям, ID, роллю та доступною фотографією профілю. Відображення фото залежить від наявності актуального зображення на сервері. Інформація про конкретного користувача відкривається через його картку та відповідні кнопки</p></section><section><h3>Оновити</h3><p>Запитує актуальні адміністративні дані із сервера. Потрібне інтернет-з’єднання і чинний сеанс. Якщо сервер недоступний, останні відображені дані можуть бути застарілими</p></section><section><h3>Ролі та права</h3><p>Звичайний адміністратор може переглядати доступні йому відомості, але не може надавати чи забирати ролі, видаляти чужі акаунти або відновлювати паролі. Ці дії доступні лише головному адміністратору і додатково перевіряються сервером</p></section><section><h3>Повна інформація та можливі дії</h3><p>У картці користувача можна відкрити «Повна інформація», переглянути доступний стан, події, входи та відвідування. Кнопка «Переглянути можливі дії» розшифровує назви типів подій у журналі. Не всі поля доступні кожній адміністративній ролі</p></section><section><h3>Запити на відновлення доступу</h3><p>Показуються запити користувачів на зміну пароля. Тільки головний адміністратор може виконувати відновлення. Звичайний адміністратор бачить попередження про відсутність цих повноважень. Новий тимчасовий пароль після створення показується лише один раз: його потрібно безпечно передати адресату</p></section><section><h3>Історія активності</h3><p>Відображає серверні події, зокрема реєстрацію, вхід, вихід, відвідування й доступні дії. Журнали зберігаються за останні 24 години, запити на відновлення — за 72 години. Час події визначається її фактичним записом; очищення серверних даних може відбуватися під час наступного запланованого запуску</p></section><section><h3>Зміна ролі та видалення користувача</h3><p>Лише головний адміністратор може змінити роль іншого користувача або видалити його акаунт. Такі операції вимагають підтвердження; видалення незворотне. Не виконуйте ці дії без перевірки вибраного акаунта</p></section><section><h3>Завершення сеансів</h3><p>У доступних списках входів можна побачити стан сеансів користувача. Можливість завершення сеансу визначається правами та власником акаунта; поточний сеанс завершується звичайною кнопкою виходу. Тип пристрою може бути визначений приблизно</p></section><section><h3>Безпека</h3><p>Не передавайте стороннім паролі, коди підтвердження, токени доступу або повні приватні дані користувачів. Публікація самого сайту в GitHub не дає адміністративних повноважень: їх перевіряє Cloudflare Worker</p></section></div></section><section id="instruction-topic-utilities" class="instruction-topic" tabindex="-1" aria-label="Зручності"><h3>Зручності</h3><div class="instruction-topic-body"><div class="instruction-subsection"><h4>Вуглеводи без цукрів</h4><p>У «Зручностях» між «Перерахунок КБЖВ сирого продукту на готовий» і «Порівняння цін товарів» знаходиться незалежний інструмент «Вуглеводи без цукрів». Введіть загальні вуглеводи й цукри за один і той самий обсяг продукту або день. Порожні поля мають нейтральну підказку «###», без прикладових чисел; підказка не є введеним значенням. Кнопка «Вибрати з КБЖВ Архіву» має компактну висоту, як «Копіювати» та «Очистити». Обчислюється різниця «вуглеводи − цукри» без додавання нового показника до КБЖВ Блоків, Калькулятора, Архіву чи графіків. Можна натиснути «Вибрати з КБЖВ Архіву», знайти дату й перенести її збережені числові значення; записи без обох показників не обираються. Результат можна скопіювати або очистити, а також змінити вручну. Інструмент читає архів, але не редагує його й не створює окремих серверних записів. Це не показник «повільних вуглеводів» або швидкості засвоєння.</p></div><div class="instruction-subsection"><h4>Перехід між інструментами</h4><p>«Знайти потрібний блок» відкриває меню з назвами інструментів, відокремлених лінією від кнопки «Закрити». Кнопки вибору мають таку саму компактну висоту, як «Закрити»; довга назва перерахунку скорочується до «Перерахунок КБЖВ сирого...», повна назва доступна через підказку. Шрифт усіх кнопок вибору — стандартний жирний шрифт сайту, без зміни підписів решти інструментів. Відступи над і під роздільною лінією компактні. Вибір прокручує сторінку до потрібного блоку. У всіх інструментах кнопки «Очистити» та «Копіювати» надають зелений успішний або червоний негативний відгук. Якщо очищувати або копіювати нічого, з’явиться повідомлення без виходу тексту за межі кнопки. Звичайний шрифт кнопок не змінено. Ця кнопка залишається окремою від загальних «Інструкцій»</p></div><div class="instruction-subsection"><h4>Поточний час</h4><p>Показує поточну дату і час. У полі «Часовий пояс» виберіть часовий пояс пристрою чи конкретне місто; показ оновлюється за годинником пристрою</p></div><div class="instruction-subsection"><h4>Генератор паролів</h4><p>Задайте довжину й набори символів, натисніть «Згенерувати пароль». Можна скопіювати або очистити результат. Згенерований пароль створюється на пристрої; не публікуйте його</p></div><div class="instruction-subsection"><h4>Коефіцієнт піднятої ваги</h4><p>Уведіть потрібні параметри власної ваги та піднятої ваги. Інструмент обчислює відношення; доступні копіювання та очищення результату</p></div><div class="instruction-subsection"><h4>Конвертер</h4><p>У швидкому режимі оберіть напрям і введіть число; результат обчислюється автоматично. Введені значення та вибрані налаштування інструментів зберігаються як локальна чернетка поточного акаунта після переходу між вкладками та перезапуску сайту. Генератор паролів — виняток: створений пароль, довжина та вибрані набори символів очищаються при виході з «Зручностей» навіть у «Тренування» або «Консоль»; пароль не зберігається в чернетці, D1 чи журналі. Для інших одиниць розгорніть «Усі одиниці — вибрати вручну», оберіть категорію, початкову й кінцеву одиниці. Пошук допомагає знайти скорочення. Кнопка «Копіювати» переносить результат без назви одиниці. MB і MiB не однакові</p></div><div class="instruction-subsection"><h4>Сирий → готовий продукт</h4><p>Введіть масу до та після приготування й вихідні показники КБЖВ. Кнопка «Вибрати з КБЖВ Блоків» компактна, як «Копіювати» й «Очистити». Можна «Вибрати з КБЖВ Блоків», перерахувати на готову масу та використати «До калькулятора». «До калькулятора» розташована праворуч від «Вибрати з КБЖВ Блоків»; нижче, окремо від примітки про олії та соуси, знаходяться дві кнопки — «Копіювати» й «Очистити». У вікні вибору продуктів кнопка «Закрити» розташована під списком без роздільної лінії. Перевіряйте числові значення й одиниці</p></div><div class="instruction-subsection"><h4>Порівняння цін</h4><p>Введіть вартість і масу/кількість для порівнюваних товарів. Інструмент приводить ціни до спільної одиниці, щоб було зручно порівняти пропозиції</p></div><div class="instruction-subsection"><h4>Калькулятор дат</h4><p>Вибирайте дати для обчислення різниці або потрібного календарного результату; підсумок можна скопіювати чи очистити</p></div><div class="instruction-subsection"><h4>Походження назви</h4><p>Натисніть підкреслену назву Avicularia у верхній панелі, щоб відкрити пояснення походження назви, історію наукової класифікації та факти про павуків-птахоїдів. Сторінка має один великий зовнішній блок із заголовком «Історія назви та натхнення:» та п’ятьма внутрішніми тематичними блоками у палітрі сайту: про назву, усі 12 видів Avicularia, улюбленого павука, Avicularia purpurea та цікаві факти. Над фотографією живого павука збережено попередню AI-ілюстрацію як художню роботу, а не як поточну іконку. Нові іконки браузера та встановленої PWA беруться з окремих PNG-файлів. Фото павука і посилання на Wikimedia Commons залишено без окремого фонового блоку. Сторінку можна прокручувати як інші сторінки; вона не змінює персональні дані</p></div></div></section><section id="instruction-topic-training" class="instruction-topic" tabindex="-1" aria-label="Тренування"><h3>Тренування</h3><div class="instruction-topic-body"><div class="instruction-subsection"><h4>Перегляд поточних даних</h4><p>«Поточна позиція», «Хронологія» та «Стан здоров’я» використовують той самий компонент читабельного перегляду (підписи, вкладені поля, шрифти й прокручування), що й шість файлів у «Файли архіву → Переглянути». Вікно центрується на екрані; кожна кнопка показує лише свій зміст із тренувальних JSON, самі файли не змінюються.</p></div><div class="instruction-subsection"><h4>Архів і формат</h4><p>Вкладка працює із шістьма JSON-файлами: маніфест, профіль, поточний стан, історія, план і виконаний план. Зберігайте їх у ZIP; структура має відповідати підтримуваному формату</p></div><div class="instruction-subsection"><h4>Завантажити на сайт</h4><p>В «Керування архівом» натисніть «Завантажити на сайт». Можна вибрати весь ZIP або потрібний JSON по одному. Сайт перевіряє назви, формат JSON та контрольні суми маніфесту ZIP; перед заміною просить підтвердження</p></div><div class="instruction-subsection"><h4>План</h4><p>Після завантаження план відображається від сьогоднішнього дня за місцевою датою пристрою: у неділю першим буде неділя, у понеділок — понеділок і так далі. Сім днів плану показуються починаючи з поточного дня тижня; вже минулі дні розташовані після майбутніх. Дати тренувань беруться безпосередньо з поля «date» у завантаженому 04_plan.json і не замінюються датами поточного тижня. Дати днів відпочинку визначаються в межах семи днів від найранішої дати тренування з архіву. Якщо у старому плані немає жодної дати, застосовується колишній календарний порядок поточного тижня. Біля кожного дня є дата у форматі ДД.ММ.РРРР. Лише минулі дні мають текстовий знак «×»; сьогоднішній і майбутні дні завершуються датою без будь-яких позначок. Хрестик з’являється автоматично після завершення календарного дня та не підтверджує виконання вправ. Порядок оновлюється після опівночі або повернення до вкладки. Це лише відображення, джерельні JSON та ключі коментарів не змінюються. У розділі «Файли архіву» вікно «Переглянути» відкривається посеред екрана, навіть коли вміст довгий; дані прокручуються всередині вікна. У вправі спочатку показано розминочні підходи від найлегшої ваги до найважчої (якщо ваги числові), а після них — робочий підхід. Якщо розминка задана часом або текстом, збережено початкову послідовність. Значення вказуються як підходи / повторення / вага або час</p></div><div class="instruction-subsection"><h4>Коментарі</h4><p>Коментарі до днів тренувань можна редагувати, очищати й копіювати. У блоці «Поточна позиція» додаткового коментаря немає. «Сховати коментарі» приховує тексти лише в інтерфейсі, не видаляючи їх. Повторне натискання «Показати коментарі» відновлює їхню видимість. Напис кнопки та фактична видимість оновлюються одночасно, зокрема після перемалювання плану, повернення до вкладки або зміни з іншої відкритої вкладки браузера. Вибраний стан «Сховати/Показати» зберігається окремо для кожного акаунта на поточному пристрої, зокрема після переходу між вкладками, повторного входу та перезапуску. Якщо браузер не дозволив зберегти налаштування, коментарі тимчасово сховаються або покажуться, але кнопка повідомить «Не збережено» — після перезапуску вибір може не відновитися. Вводячи коментар, можна не втратити чернетку до натискання «Зберегти дані»: вона зберігається локально, а серверний запис змінюється тільки після успішного збереження. Локальні чернетки не замінюють тренувальний ZIP і не синхронізуються з іншими пристроями Під коментарем у тренуваннях кнопки розміщені в порядку «Редагувати», «Вставити», «Очистити», «Скопіювати». Для вставлення потрібно спочатку перейти в режим редагування.</p></div><div class="instruction-subsection"><h4>Поточна позиція</h4><p>Три кнопки «Поточна позиція», «Хронологія», «Стан здоров’я» показують відповідні поля із завантажених JSON. Перевіряйте дату останнього стану: перегляд не означає автоматичного медичного оновлення</p></div><div class="instruction-subsection"><h4>Файли архіву</h4><p>Кнопка «Переглянути» відкриває по центру екрана вміст кожного JSON у читабельних внутрішніх картках без ручного редагування оригіналу; довгий вміст прокручується у вікні. Перегляд можна закрити кнопкою «Закрити» або натисканням поза вікном — так само, як «Поточну позицію», «Хронологію» і «Стан здоров’я»; натискання всередині не закриває його. Для внесення змін до файлів потрібно повторне завантаження відповідних JSON або ZIP</p></div><div class="instruction-subsection"><h4>Вивантажити з сайту</h4><p>«Вивантажити початковий ZIP» експортує початкові шість JSON, «Вивантажити виконаний ZIP» формує похідний архів із коментарями до днів; раніше збережені службові примітки поточної позиції не видаляються з даних автоматично. Також доступне вивантаження кожного JSON окремо. Під час експорту виконаного ZIP перераховуються SHA-256 маніфесту</p></div><div class="instruction-subsection"><h4>Оновити, очистити та конфлікти</h4><p>«Оновити вкладку» перевіряє дані. «Очистити вкладку» потребує підтвердження та може видалити шість файлів і коментарі. Якщо локальна й серверна версії конфліктують, спочатку вивантажте резервний ZIP, тоді обирайте локальну або серверну копію</p></div><div class="instruction-subsection"><h4>Розміри архіву та синхронізація</h4><p>Один із шести JSON-файлів — до 16 МіБ; розпаковані шість JSON та загальний серверний знімок — до 48 МіБ; ZIP для імпорту — до 48 МіБ. Це ліміти даних, а не гарантія швидкодії пристрою. Весь ZIP завжди містить шість файлів; їхню структуру не змінено. Збереження на сервері відбувається частинами через Worker v110 із перевіркою хешів, контролем ревізій та без видалення старого архіву. При першому збереженні нова схема активується автоматично тільки після повного передавання. За помилки незавершений запис не замінює попередній. Для довгострокової надійності регулярно вивантажуйте ZIP поза сайтом. Розмір усіх користувачів і модулів обмежує спільна фізична квота D1 Free — 500 МБ.</p></div><div class="instruction-subsection"><h4>Де зберігається</h4><p>Архів тренувань зберігає шість вихідних JSON у власній IndexedDB. За допомогою Worker v110 сервер записує великий архів частинами з перевіркою SHA-256 та захистом ревізій; стара D1-копія не видаляється під час переходу. До 16 МіБ на один JSON та до 48 МіБ на весь розпакований архів і серверний знімок; ZIP для імпорту — до 48 МіБ. Ці програмні межі не збільшують загальні 500 МБ спільної D1 або квоту Safari. Спочатку оновлюйте Worker, потім сайт. Для резервної копії шести файлів використовуйте тренувальний ZIP, а не загальний JSON КБЖВ</p></div></div></section><section id="instruction-topic-backup" class="instruction-topic" tabindex="-1" aria-label="Резервні копії та імпорт"><h3>Резервні копії та імпорт</h3><div class="instruction-topic-body"><div class="instruction-subsection"><h4>Звідки запускати</h4><p>У вкладці «КБЖВ Блоки» натисніть «Експорт бази» або «Імпорт бази». Це окремий механізм від ZIP тренувань. Номер JSON-експорту зростає лише після фактичної зміни даних, що входять до резервного копіювання; повторний експорт незмінних даних має ту саму версію. Імпорт старішого файлу не зменшує раніше відомий номер. Номер зберігається на поточному пристрої для акаунта, але якщо дані браузера вже повністю стерто, попередню історію автоматично відновити неможливо без старого файлу копії</p></div><div class="instruction-subsection"><h4>Режими експорту</h4><p>Виберіть «Усе», «КБЖВ Блоки», «Калькулятор», «Архів» або «Профіль» та перевірте попередній перегляд. Файл містить тільки вибрані дані. Фото запланованих продуктів зберігаються у складі записів КБЖВ Блоків і відновлюються при імпорті цього розділу; для перевірки завжди переглядайте відновлені фото. Усі готові продукти, зокрема додані за допомогою AVP2 після ручного збереження, входять до експорту КБЖВ Блоків. Повна копія включає блоки та їх сортування, калькулятор і денні цілі, архів і нотатку, профіль та параметри швидкої прокрутки</p></div><div class="instruction-subsection"><h4>Як імпортувати</h4><p>Оберіть JSON, дочекайтеся перевірки структури та перегляньте кількість записів і відмінності. Виберіть розділ і метод: замінити відповідні дані або «тільки нове». Після підтвердження перевірте показники на сайті</p></div><div class="instruction-subsection"><h4>Режим «тільки нове»</h4><p>Додає записи, яких ще немає за правилами конкретного розділу; наявні записи не повинен замінювати. Повний імпорт замінює вибрані розділи. Для обох режимів перевіряйте попередній перегляд і створіть копію даних перед імпортом</p></div><div class="instruction-subsection"><h4>Захист від пошкоджень</h4><p>Імпорт відхиляє непідтримувані версії схеми, некоректні типи даних і частину неповних резервних копій. Якщо запис файлу не вдався, сайт повинен повідомити про помилку; повторюйте операцію лише після перевірки вільного місця</p></div><div class="instruction-subsection"><h4>Що не входить</h4><p>Локальні стани показу коментарів, чернетки інструментів, незавершені коментарі, остання вкладка, пошуки та дані генератора паролів не входять у загальний JSON-експорт; ці налаштування й чернетки не переносяться між пристроями автоматично. Паролі генератора не зберігаються ніде. Журнал консолі, серверні сеанси і паролі не переносяться загальним JSON-експортом; тренувальні шість файлів потрібно вивантажувати окремим ZIP. Збережіть резервні копії поза браузером. Зміни, збережені у КБЖВ та тренуваннях, відновлюються після повторного входу зі свого локального сховища, а між пристроями — після успішної серверної синхронізації. Незбережені текстові зміни у профілі запам’ятовуються локально як чернетка до натискання «Зберегти профіль»; чернетка не є серверною копією. Вихід очікує завершення локальних операцій IndexedDB</p></div><div class="instruction-subsection"><h4>Поштучна синхронізація</h4><p>Після повного експорту КБЖВ і ZIP тренувань відкрийте «Консоль → Стан системи» та натисніть «Перейти на поштучну синхронізацію». Цю кнопку видно лише до активації v2; після переходу вона зникає. Перенесення потрібно підтвердити вручну. Стара серверна копія залишається в D1, а v2 зберігає продукти, архів, калькулятор і налаштування окремими записами. Після активації старі версії сайту не можуть безпечно записувати старий формат; використовуйте поточну версію сайту із Worker v110. Якщо дані змінено на двох пристроях в одному записі, перезапис зупиняється і потрібна ручна перевірка. Зовнішній JSON-експорт і ZIP тренувань залишаються обов'язковими резервними копіями. Не очищайте кеш Safari або IndexedDB. База D1 Free має ліміт 500 МБ загалом, але 450 МБ не є гарантованою місткістю даних КБЖВ: залишайте резерв для таблиць, PDF, індексів та попередніх копій. Протокол залишається експериментальним і потребує перевірки на справжній D1.</p></div><div class="instruction-subsection"><h4>Перевірка синхронізації без змін даних</h4><p>Під кнопкою «Синхронізувати зараз» розташована «Перевірити синхронізацію». Вона зчитує дані з D1 та порівнює контрольні суми КБЖВ із локальними записами; нічого не відправляє і не замінює. Якщо порівняння підтвердило відмінності, у «Стані системи» доступний вибір копії: «Взяти дані із сервера» або «Зберегти дані цього пристрою». Перша дія замінює локальні КБЖВ даними сервера тільки після вашого підтвердження та перевірки ревізії. У поштучному режимі v2 примусовий перезапис сервера локальною копією заблокований — кнопка пояснить причину; не очищуйте браузер, створіть резервні копії та перевірте конфлікт. Для усунення проблеми потрібне окреме безпечне розв'язання конфлікту, не автоматичний перезапис. Журнал дій фіксує перевірку, синхронізацію та підтверджені операції вибору копії. Якщо сервер недоступний або перевірка не вдалася, причина показується у «Стані системи» та деталях синхронізації. «Не синхронізовано» позначається жовтим індикатором і означає локальні зміни або підтверджену розбіжність, але не втрату серверних даних. Зелений означає підтверджений збіг, червоний — помилку чи конфлікт, сірий — відсутність перевірки. Результат з’являється в картці «Порівняння копій» (сервер перевірено, копії збігаються, різні дані або помилка). Сама перевірка не синхронізує несинхронізовані зміни. Тренування мають окремий механізм і тут відображають останній відомий стан. Якщо копії різні, спочатку збережіть резервні копії й лише потім вирішуйте, яку версію використовувати.</p></div><div class="instruction-subsection"><h4>Деталі синхронізації</h4><p>У консолі відкрийте «Синхронізація всього сайту» → «Переглянути детально». Окремо показано КБЖВ (блоки, кількість записів, калькулятор, архів), тренування разом із версією, датами й станом їхньої окремої бази (біля рядка «Стан синхронізації тренувань» показано такий самий кольоровий індикатор, як у загальному стані тренувань), профіль та локальні налаштування, а також останні операції резервного копіювання КБЖВ. Зелений статус можливий лише після порівняння доступних локальних і серверних даних; порядок полів JSON не створює хибної розбіжності. Якщо «КБЖВ Блоки» показує «Дані відрізняються», локальний та серверний вміст справді може бути різним. Спочатку експортуйте повну копію; автоматичного перезапису різних даних немає. Чернетки та офлайн-пристрої не перевіряються. У «Зручностях» поля пошуку починають підсвічуватись тільки після натискання користувача. Для введення продуктів, ваги й нотаток застосовується те саме м’яке бірюзове світіння, що й у пошуку продукту.</p></div><div class="instruction-subsection"><h4>Відновлення після очищення</h4><p>Збережіть повний JSON і тренувальний ZIP до очищення сайту. Після повторного входу імпортуйте базу та ZIP, перевірте профіль, блоки, калькулятор, архів, коментарі й тренувальний план. Серверну синхронізацію не вважайте заміною окремої резервної копії. До активації v2 повний знімок КБЖВ для синхронізації обмежено 32 МіБ; це не локальний ліміт IndexedDB. Підвищення програмного ліміту не збільшує квоту Cloudflare D1 або пам’ять Worker. Для поточної версії із поштучною синхронізацією потрібен Worker v110. У режимі v1 автоматична перевірка може читати лише ревізію й розмір; у режимі v2 команда «Перевірити синхронізацію» порівнює хеші окремих записів без перезапису. Перевірка великих індексів потребує інтернету й часу. Великі знімки потрібно перевірити на реальній Cloudflare D1. При помилці синхронізації не очищуйте локальні дані</p></div></div></section>
+      </div>
+      <div class="product-modal-actions system-help-actions"><button type="button" id="system-help-close">Закрити</button></div>
+    </div>
+  </div>
+  <div id="instruction-picker-modal" class="product-modal utility-picker-modal" role="dialog" aria-modal="true" aria-labelledby="instruction-picker-title">
+    <div class="product-modal-box utility-picker-box instruction-picker-box">
+      <h2 id="instruction-picker-title" class="product-modal-title">Виберіть потрібну інструкцію:</h2>
+      <div id="instruction-picker-list" class="utility-picker-list instruction-picker-list">
+        <button type="button" data-instruction-target="instruction-topic-start">Початок роботи та навігація</button>
+        <button type="button" data-instruction-target="instruction-topic-profile">Профіль</button>
+        <button type="button" data-instruction-target="instruction-topic-blocks">КБЖВ Блоки</button>
+        <button type="button" data-instruction-target="instruction-topic-calculator">Калькулятор</button>
+        <button type="button" data-instruction-target="instruction-topic-archive">КБЖВ Архів</button>
+        <button type="button" data-instruction-target="instruction-topic-console">Консоль</button>
+        <button type="button" data-instruction-target="instruction-topic-admin">Адміністрація</button>
+        <button type="button" data-instruction-target="instruction-topic-utilities">Зручності</button>
+        <button type="button" data-instruction-target="instruction-topic-training">Тренування</button>
+        <button type="button" data-instruction-target="instruction-topic-backup">Резервні копії та імпорт</button>
+
+      </div>
+      <div class="instruction-picker-divider" aria-hidden="true"></div>
+      <div class="product-modal-actions"><button type="button" id="instruction-picker-close">Закрити</button></div>
+    </div>
+  </div>
+  <div id="import-preview-modal" class="product-modal">
+    <div class="product-modal-box import-preview-box">
+      <div class="product-modal-title">Перевірка імпорту</div>
+      <p class="import-preview-note">Перевірте дані файлу та виберіть спосіб імпорту</p>
+      <div class="transfer-scope-actions" id="import-scope-actions">
+        <button type="button" id="import-scope-all" data-scope="all">Імпортувати усе</button>
+        <button type="button" id="import-scope-new-all" data-scope="new-all" aria-label="Імпортувати тільки нові дані">Імпортувати усе <span class="import-only-new-dot" aria-hidden="true"></span></button>
+        <button type="button" id="import-scope-blocks" data-scope="blocks">Імпортувати КБЖВ Блоки</button>
+        <button type="button" id="import-scope-new-blocks" data-scope="new-blocks" aria-label="Імпортувати тільки нові дані">Імпортувати КБЖВ Блоки <span class="import-only-new-dot" aria-hidden="true"></span></button>
+        <button type="button" id="import-scope-calculator" data-scope="calculator">Імпортувати КБЖВ Калькулятор</button>
+        <button type="button" id="import-scope-new-calculator" data-scope="new-calculator" aria-label="Імпортувати тільки нові дані">Імпортувати КБЖВ Калькулятор <span class="import-only-new-dot" aria-hidden="true"></span></button>
+        <button type="button" id="import-scope-archive" data-scope="archive">Імпортувати КБЖВ Архів</button>
+        <button type="button" id="import-scope-new-archive" data-scope="new-archive" aria-label="Імпортувати тільки нові дані">Імпортувати КБЖВ Архів <span class="import-only-new-dot" aria-hidden="true"></span></button>
+        <button type="button" id="import-scope-profile" data-scope="profile">Імпортувати дані профілю</button>
+        <button type="button" id="import-scope-new-profile" data-scope="new-profile" aria-label="Імпортувати тільки нові дані">Імпортувати дані профілю <span class="import-only-new-dot" aria-hidden="true"></span></button>
+      </div>
+      <div class="import-preview-data">
+        <p class="import-new-indicator-explainer"><span class="import-only-new-dot" aria-hidden="true"></span> — цей індикатор показує, що ви додаєте тільки нові значення, не змінюючи та не видаляючи старі</p>
+        <div>КБЖВ-блоків у файлі: <strong id="import-preview-products">0</strong></div>
+        <div class="import-preview-diff">Зміни блоків: <strong id="import-preview-products-diff">—</strong></div>
+        <div>Записів архіву у файлі: <strong id="import-preview-archive">—</strong></div>
+        <div>Нотатка архіву у файлі: <strong id="import-preview-archive-note">—</strong></div>
+        <div class="import-preview-diff">Зміни архіву: <strong id="import-preview-archive-diff">—</strong></div>
+        <div>Записів калькулятора у файлі: <strong id="import-preview-calculator">—</strong></div>
+        <div>Чернетка калькулятора: <strong id="import-preview-draft">—</strong></div>
+        <div>Денна ціль у файлі: <strong id="import-preview-goal">—</strong></div>
+        <div>Налаштування сортування КБЖВ-блоків: <strong id="import-preview-settings">—</strong></div>
+        <div>Дані профілю у файлі: <strong id="import-preview-profile">—</strong></div>
+        <div>Версія: <strong id="import-preview-version">—</strong></div>
+        <div>Дата експорту: <strong id="import-preview-date">—</strong></div>
+      </div>
+      <div class="product-modal-actions">
+        <button type="button" id="import-preview-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="import-preview-confirm">Імпортувати</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));
+    }
+  </script>
+
+  <div id="admin-full-modal" class="product-modal">
+    <div class="product-modal-box admin-full-box">
+      <div class="product-modal-title">Повна інформація користувача</div>
+      <div id="admin-full-user" class="admin-logins-user">—</div>
+      <div id="admin-full-summary" class="admin-full-summary"></div>
+      <div class="admin-full-tools">
+        <button type="button" id="admin-open-action-types">Переглянути можливі варіанти дій</button>
+      </div>
+      <div class="admin-full-heading">Поточні дані користувача</div>
+      <div class="admin-state-search">
+        <input id="admin-full-state-search" type="search" autocomplete="off" placeholder="Пошук у поточних даних..." aria-label="Пошук у поточних даних користувача">
+        <div id="admin-full-state-search-status" class="admin-state-search-status">Пошук виконується буквально за введеними літерами</div>
+      </div>
+      <div id="admin-full-state-search-results" class="admin-state-search-results" hidden></div>
+      <div id="admin-full-state" class="admin-full-state">Завантаження поточних даних</div>
+      <div class="admin-full-heading">Повна історія дій</div>
+      <div id="admin-full-list" class="admin-full-list"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="admin-full-close">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-users-modal" class="product-modal">
+    <div class="product-modal-box admin-users-modal-box">
+      <div class="product-modal-title">Список користувачів</div>
+      <div id="admin-users-modal-status" class="admin-logins-user">—</div>
+      <div id="admin-users-modal-list" class="admin-users-simple-list"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="admin-users-modal-close">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-action-types-modal" class="product-modal">
+    <div class="product-modal-box admin-action-types-box">
+      <div class="product-modal-title">Можливі варіанти дій</div>
+      <div class="admin-logins-user">Типи подій, які можуть з’являтися в повній історії користувача</div>
+      <div id="admin-action-types-list" class="admin-action-types-list"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="admin-action-types-close">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-temp-password-modal" class="product-modal">
+    <div class="product-modal-box admin-temp-password-box">
+      <div class="product-modal-title">Новий пароль створено</div>
+      <div id="admin-temp-password-user" class="admin-logins-user">—</div>
+      <div class="admin-temp-password-warning">Цей пароль показується тільки зараз. Скопіюйте його та передайте користувачу через ваш узгоджений канал зв’язку</div>
+      <code id="admin-temp-password-value" class="admin-temp-password-value">—</code>
+      <div class="product-modal-actions">
+        <button type="button" id="admin-temp-password-copy">Скопіювати пароль</button>
+        <button type="button" id="admin-temp-password-close">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-logins-modal" class="product-modal">
+    <div class="product-modal-box admin-logins-box">
+      <div class="product-modal-title">Входи та відвідування</div>
+      <div id="admin-logins-user" class="admin-logins-user">—</div>
+      <div id="admin-logins-list" class="admin-logins-list"></div>
+      <div class="product-modal-actions">
+        <button type="button" id="admin-logins-close">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- v91/8321: masked deletion confirmation code, without browser prompt. -->
+  <div id="owner-password-modal" class="product-modal" role="dialog" aria-modal="true" aria-labelledby="owner-password-title">
+    <div class="product-modal-box">
+      <div class="product-modal-title" id="owner-password-title">Підтвердження видалення</div>
+      <p id="owner-password-target">Видалення акаунта</p>
+      <label for="owner-password-input">Введіть код підтвердження видалення:</label>
+      <input id="owner-password-input" type="password" inputmode="numeric" autocomplete="off" maxlength="4" style="width:100%;min-height:44px;font-size:16px;margin:10px 0 14px;box-sizing:border-box;">
+      <div class="product-modal-actions">
+        <button id="owner-password-cancel" type="button" class="product-action-cancel">Скасувати</button>
+        <button id="owner-password-confirm" type="button">Підтвердити видалення</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Avicularia v157: local styled confirmation for ending one OTHER device session. -->
+  <div id="av-session-confirm-modal" class="product-modal av-overlay" role="dialog" aria-modal="true" aria-labelledby="av-session-confirm-title" hidden>
+    <div class="product-modal-box av-session-confirm-box">
+      <div class="product-modal-title" id="av-session-confirm-title">Завершити сеанс?</div>
+      <p id="av-session-confirm-description">Завершити вхід з іншого пристрою?</p>
+      <p class="av-session-confirm-hint">На цьому пристрої ви залишитеся в акаунті</p>
+      <div class="product-modal-actions">
+        <button type="button" id="av-session-confirm-cancel" class="product-action-cancel">Скасувати</button>
+        <button type="button" id="av-session-confirm-yes">Завершити сеанс</button>
+      </div>
+    </div>
+  </div>
+  <div id="av-transfer-modal" class="product-modal av-overlay" role="dialog" aria-modal="true" aria-labelledby="av-transfer-title" hidden>
+    <div class="product-modal-box av-modal-box">
+      <div class="product-modal-title" id="av-transfer-title">Керування файлами</div>
+      <div id="av-transfer-actions"></div>
+      <div class="product-modal-actions"><button type="button" id="av-transfer-close">Закрити</button></div>
+    </div>
+  </div>
+  <div id="av-json-viewer-modal" class="product-modal av-overlay" role="dialog" aria-modal="true" aria-labelledby="av-json-viewer-title" hidden>
+    <div class="product-modal-box av-modal-box">
+      <div class="product-modal-title" id="av-json-viewer-title">Перегляд файлу</div>
+      <div id="av-json-viewer" class="av-json-viewer av-readable-viewer" tabindex="0" aria-label="Перегляд даних файлу тільки для читання"></div>
+      <div class="product-modal-actions"><button type="button" id="av-json-viewer-close">Закрити</button></div>
+    </div>
+  </div>
+  <input type="file" id="av-import-file" accept=".zip,.json,application/zip,application/json" hidden>
+  
+
+  <!-- v159: explicit notice when an archive date already exists (including a missing-day marker). -->
+  <div id="archive-duplicate-date-modal" class="product-modal" role="alertdialog" aria-modal="true" aria-labelledby="archive-duplicate-date-title" aria-describedby="archive-duplicate-date-message">
+    <div class="product-modal-box">
+      <div class="product-modal-title" id="archive-duplicate-date-title">Запис уже існує</div>
+      <p id="archive-duplicate-date-message" class="import-preview-note"></p>
+      <div class="product-modal-actions">
+        <button type="button" id="archive-duplicate-date-ack">Зрозуміло</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="calc-after-archive-modal" class="product-modal" role="dialog" aria-modal="true" aria-labelledby="calc-after-archive-title">
+    <div class="product-modal-box calc-after-archive-box">
+      <div class="product-modal-title" id="calc-after-archive-title">Збережено в архів</div>
+      <p class="import-preview-note">Денний підсумок уже збережено. Бажаєте також очистити калькулятор?</p>
+      <div class="product-modal-actions">
+        <button type="button" id="calc-after-archive-keep">Ні, залишити</button>
+        <button type="button" id="calc-after-archive-clear">Так, очистити</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- v161: small neutral edge markers, independent of the page and modal stacking context. -->
+  <div id="av-context-modal" class="product-modal av-context-modal av-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="av-context-modal-title">
+    <div class="product-modal-box av-modal-box av-context-modal-box">
+      <h2 id="av-context-modal-title" class="product-modal-title">Поточна позиція</h2>
+      <div id="av-context-modal-body" class="av-context-modal-body av-json-viewer av-readable-viewer" tabindex="0" aria-label="Перегляд поточних даних тренувань тільки для читання"></div>
+      <div class="product-modal-actions"><button type="button" id="av-context-close">Закрити</button></div>
+    </div>
+  </div>
+  <div id="quick-scroll-height-modal" class="product-modal" hidden role="dialog" aria-modal="true" aria-labelledby="quick-scroll-height-modal-title">
+    <div class="product-modal-box quick-scroll-height-modal-box">
+      <h2 id="quick-scroll-height-modal-title" class="product-modal-title">Змінити висоту швидкої прокрутки</h2>
+      <label for="system-quick-scroll-height">Висота: від 0% до 100%. 0% — нижній край, 50% — середина екрана, 100% — верхній край. Можна вводити десяті частки, наприклад 2,5%</label>
+      <input type="text" id="system-quick-scroll-height" maxlength="5" inputmode="decimal" value="50" aria-label="Висота кнопок швидкої прокрутки у відсотках">
+      <div class="product-modal-actions">
+        <button type="button" id="system-quick-scroll-height-save">Змінити</button>
+        <button type="button" id="system-quick-scroll-height-close">Закрити</button>
+      </div>
+    </div>
+  </div>
+  <div id="quick-scroll-width-modal" class="product-modal" hidden role="dialog" aria-modal="true" aria-labelledby="quick-scroll-width-modal-title">
+    <div class="product-modal-box quick-scroll-height-modal-box">
+      <h2 id="quick-scroll-width-modal-title" class="product-modal-title">Змінити ширину швидкої прокрутки</h2>
+      <label for="system-quick-scroll-width">Ширина: від 0% до 100%. 0% — вибраний край, 50% — центр екрана, 100% — протилежний край. Можна вводити десяті частки, наприклад 2,5%</label>
+      <input type="text" id="system-quick-scroll-width" maxlength="5" inputmode="decimal" value="2,5" aria-label="Горизонтальне розташування у відсотках">
+      <div class="product-modal-actions"><button type="button" id="system-quick-scroll-width-save">Змінити</button><button type="button" id="system-quick-scroll-width-close">Закрити</button></div>
+    </div>
+  </div>
+  <div id="quick-scroll-size-modal" class="product-modal" hidden role="dialog" aria-modal="true" aria-labelledby="quick-scroll-size-modal-title">
+    <div class="product-modal-box quick-scroll-height-modal-box">
+      <h2 id="quick-scroll-size-modal-title" class="product-modal-title">Змінити розмір кнопок прокрутки</h2>
+      <label for="system-quick-scroll-size-width">Ширина смужки (4–14 px):</label>
+      <input type="number" id="system-quick-scroll-size-width" min="4" max="14" step="1" inputmode="numeric" value="7" aria-label="Ширина кнопки в пікселях">
+      <label for="system-quick-scroll-size-height">Висота смужки (18–48 px):</label>
+      <input type="number" id="system-quick-scroll-size-height" min="18" max="48" step="1" inputmode="numeric" value="31" aria-label="Висота кнопки в пікселях">
+      <div class="quick-scroll-size-reset-row"><button type="button" id="system-quick-scroll-size-reset">Задати за замовчуванням</button></div>
+      <div class="product-modal-actions"><button type="button" id="system-quick-scroll-size-save">Змінити</button><button type="button" id="system-quick-scroll-size-close">Закрити</button></div>
+    </div>
+  </div>
+  <div id="quick-scroll-controls" class="quick-scroll-controls" data-side="left" role="group" aria-label="Швидка прокрутка" hidden>
+    <button type="button" id="quick-scroll-up" class="quick-scroll-button" aria-label="До початку" title="До початку"></button>
+    <button type="button" id="quick-scroll-down" class="quick-scroll-button" aria-label="До кінця" title="До кінця"></button>
+  </div>
+</body>
+</html>
